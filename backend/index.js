@@ -10,7 +10,7 @@ require("dotenv").config()
 
 // levantando el servidor
 const app = express()
-app.listen(3000, console.log("servidor en funcionamiento"))
+//app.listen(3000, console.log("servidor en funcionamiento"))
 
 // middleware
 app.use(express.json())
@@ -170,7 +170,6 @@ const key = process.env.LLAVESECRETA
 app.post('/registro', async (req, res) => {
     try {
         const { nombre, apellido, email, telefono, password, foto } = req.body
-        console.log(password)
         if (!nombre || !apellido || !email || !password) {
             return res.status(502).json("Faltan datos para poder realizar el registro")
         }
@@ -305,3 +304,4 @@ app.delete('/eliminar-perfil/:id_usuario', async (req, res) => {
         res.status(500).send({ message: "Problemas con el servidor", err: error })
     }
 })
+module.exports = app
