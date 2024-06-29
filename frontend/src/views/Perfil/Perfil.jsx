@@ -1,12 +1,14 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './Perfil.css';
-import fotoPerfil from '../../assets/img/vehiculo1.jpg';
 import { useNavigate } from 'react-router-dom';
 import { validacionRutaPerfil } from '../../fuction/funciones'
+import { AuthContext } from '../../context/Context'
 
 function Perfil() {
+  
+  const { login } = useContext(AuthContext)
 
   useEffect(() => {
     const token = sessionStorage.getItem('token')
@@ -19,17 +21,11 @@ function Perfil() {
       }
     }
     permisos()
+    login()
   }, [])
+  
+  const [usuario, setUsuario] = useState({})// con la validacion del token debemos setear en Usuario con los datos correspondientes);
 
-  const [usuario, setUsuario] = useState({ // con la validacion del token debemos setear en Usuario con los datos correspondientes
-    nombre: 'Juan',
-    apellido: 'Pérez',
-    email: 'juan.perez@example.com',
-    telefono: '123-456-7890',
-    foto: fotoPerfil
-  });
-
-  console.log(usuario)
   const navigate = useNavigate();
 
   const handleEditar = () => {

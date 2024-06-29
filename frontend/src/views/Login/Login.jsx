@@ -1,8 +1,7 @@
 import './Login.css'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { AuthContext } from '../../context/Context'
-import { useState } from 'react'
 
 function Login() {
 

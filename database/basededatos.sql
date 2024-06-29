@@ -52,7 +52,7 @@ CREATE TABLE publicaciones (
     id_estado INT NOT NULL,
     descripcion TEXT,
     imagen VARCHAR(255),
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
 );
 
 INSERT INTO marcas (nombre) VALUES
