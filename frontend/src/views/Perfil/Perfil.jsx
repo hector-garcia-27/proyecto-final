@@ -12,15 +12,14 @@ function Perfil() {
     const token = sessionStorage.getItem('token')
     const permisos = async () => {
       const data = await validacionRutaPerfil(token)
-      if(data){
-        setUsuario(data)
+      if (data) {
+        setUsuario(data[0])
       } else {
         console.log("error al cargar la data")
       }
     }
     permisos()
   }, [])
-
 
   const [usuario, setUsuario] = useState({ // con la validacion del token debemos setear en Usuario con los datos correspondientes
     nombre: 'Juan',
@@ -30,6 +29,7 @@ function Perfil() {
     foto: fotoPerfil
   });
 
+  console.log(usuario)
   const navigate = useNavigate();
 
   const handleEditar = () => {
