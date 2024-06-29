@@ -24,7 +24,7 @@ function Perfil() {
     login()
   }, [])
   
-  const [usuario, setUsuario] = useState({})// con la validacion del token debemos setear en Usuario con los datos correspondientes);
+  const [usuario, setUsuario] = useState([])// con la validacion del token debemos setear en Usuario con los datos correspondientes);
 
   const navigate = useNavigate();
 
