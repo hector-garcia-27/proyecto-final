@@ -21,7 +21,7 @@ function Login() {
 
     const handleLogin = () => {
         login()
-        navigate('/')
+        
     }
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -34,22 +34,18 @@ function Login() {
             setError("Ingrese su email")
             return
         } if (!regexParaEmail.test(email)) {
-            setError("Ingrese un email válido")
+            setError("Email no cumple con un formato válido")
             return
         } if (password === "") {
             setError("Ingrese su password")
             return
         } if (!regexPas.test(password)) {
-            setError("password incorrecta")
+            setError("Formato de contraseña no cumple con los requisitos")
             return
         }
         //Se elimina el mensaje de error
         setError("")
-        setSucces("Registro exitoso")
-        handleLogin()
         peticionLoginPost()
-        navigate('/perfil')
-
     }
 
     const peticionLoginPost = async () => {
@@ -61,13 +57,22 @@ function Login() {
                 },
                 body: JSON.stringify({ email, password })
             })
-            if (!res.ok) {
-                throw new Error('Error de la solicitud')
+            if (res.status === 404) {
+                setError("El usuario no existe")
             }
-            const { token } = await res.json()
-            sessionStorage.setItem('token', token);
+            if (res.status === 401){
+                setError("La contraseña es incorrecta")
+            }
+            if (res.status === 200) {
+                const { token } = await res.json()
+                sessionStorage.setItem('token', token);
+                setSucces("Registro exitoso")
+                navigate('/')
+                handleLogin()
+            }
+
         } catch (error) {
-// falta el error
+            // falta el error
         }
 
     }

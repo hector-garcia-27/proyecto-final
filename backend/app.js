@@ -7,8 +7,8 @@ const { verificarUsuario, getDataMisPub, getDataPerfil, postearPub, actualizarPu
 const { autenticadorToken } = require("./middleware.js")
 require("dotenv").config()
 
-app = express()
 // el levantamiento del servdor esta en index.js
+app = express()
 // middleware
 app.use(express.json())
 
@@ -191,18 +191,18 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body
         const usuarioVerificado = await verificarUsuario(email)
-        const verificarPassword = bcrypt.compareSync(password, usuarioVerificado.password)
+        if (!usuarioVerificado.rowCount) {
+            return res.status(404).send("el usuario no existe")
+        }
+        const verificarPassword = bcrypt.compareSync(password, usuarioVerificado.rows[0].password)
         if (!verificarPassword) {
-            throw {
-                code: 401,
-                message: "La contraseña es incorrecta"
-            }
+            return res.status(401).send("la contraseña es incorrecta")
         } else {
             const token = jwt.sign({
-                nombre: usuarioVerificado.nombre,
-                apellido: usuarioVerificado.apellido,
-                email: usuarioVerificado.email,
-                id_usuario: usuarioVerificado.id_usuario
+                nombre: usuarioVerificado.rows[0].nombre,
+                apellido: usuarioVerificado.rows[0].apellido,
+                email: usuarioVerificado.rows[0].email,
+                id_usuario: usuarioVerificado.rows[0].id_usuario
             }, key)
             res.status(200).send({ token })
             console.log(token)
