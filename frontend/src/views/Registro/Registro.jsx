@@ -1,8 +1,10 @@
 import './Registro.css'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 function Registro() {
 
+  const navigate = useNavigate()
   //Expresión regular para validar que el campo de email contenga el formato adecuado
   const regexParaEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
@@ -52,6 +54,8 @@ function Registro() {
     setNuevoUsuario({ ...nuevoUsuario, imagen: URL.createObjectURL(file) });
   };
 
+  const [aprobado, setAprobado] = useState(false)
+
   const handleSubmit = (event) => {
     event.preventDefault();
     registrarUsuario()
@@ -66,11 +70,16 @@ function Registro() {
         },
         body: JSON.stringify(nuevoUsuario)
       })
-      if (!res.ok) {
-        throw new Error('Error de la solicitud')
+      if(res.status === 501){
+        console.log('Error de la solicitud')
+        return alert("el usuario ya esta registrado")
       }
-      const data = await res.json()
-      console.log("respuesta del server: ", data)
+      if(res.status === 201 ){
+        const data = await res.json()
+        console.log("respuesta del server: ", data)
+        navigate('/login')
+      }
+      setAprobado(true)
     } catch (error) {
       console.log(error)
     }
@@ -110,7 +119,7 @@ function Registro() {
     setError("")
     setSucces("Registro exitoso")
 
-    console.log('Datos del nuevo usuario:', nuevoUsuario);
+    //console.log('Datos del nuevo usuario:', nuevoUsuario);
   }
 
 

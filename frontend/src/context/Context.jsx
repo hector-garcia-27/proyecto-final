@@ -86,6 +86,7 @@ const AuthProvider = ({ children }) => {
     }
 
     const login = () => {
+        
         setIsAuthenticated(true);
     };
 
