@@ -3,7 +3,6 @@ import { useState } from 'react'
 
 function EditarPerfil() {
 
-  //Expresión regular para validar que el campo de email contenga el formato adecuado
   const regexParaEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
   const regexPas = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.-])[A-Za-z\d$@$!%*?&.-]{8,15}$/;
 
@@ -82,7 +81,7 @@ function EditarPerfil() {
     }
 
     setError('');
-    setSucces('Registro exitoso');
+    setSucces('Perfil editado exitosamente');
 
     console.log('Datos del nuevo usuario:', nuevoUsuario);
   };
@@ -189,8 +188,8 @@ function EditarPerfil() {
           </button>
         </div>
         <div className='mensajeEditar'>
-          {error.length > 0 && <h3 className='error'>{error}</h3>}
-          {succes.length > 0 && <h3 className='succes'>{succes}</h3>}
+          {error.length > 0 && <h3 className='alerta alerta-error'>{error}</h3>}
+          {succes.length > 0 && <h3 className='alerta alerta-exito'>{succes}</h3>}
         </div>
       </form>
     </div>

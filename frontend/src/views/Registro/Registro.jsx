@@ -32,9 +32,11 @@ function Registro() {
     }
 
     if (name === 'telefono') {
-      if (value.startsWith('+56') && value.length <= 12) {
-        setNuevoUsuario({ ...nuevoUsuario, telefono: value });
-      } else if (value.startsWith('+56')) {
+      if (value.startsWith('')) {
+        if (value.length <= 9) {
+          setNuevoUsuario({ ...nuevoUsuario, telefono: value });
+        }
+      } else if (value.startsWith('')) {
         setNuevoUsuario({ ...nuevoUsuario, telefono: '' });
       }
     } else {
@@ -75,34 +77,46 @@ function Registro() {
       console.log(error);
     }
 
-    setSucces("");
-    if (nuevoUsuario.nombre === "") {
-      setError("Ingrese su nombre");
-      return;
-    } if (nuevoUsuario.apellido === "") {
-      setError("Ingrese su apellido");
-      return;
-    } if (nuevoUsuario.telefono === "") {
-      setError("Ingrese su número");
-      return;
-    } if (nuevoUsuario.email === "") {
-      setError("Ingrese su email");
-      return;
-    } if (!regexParaEmail.test(nuevoUsuario.email)) {
-      setError("Ingrese un email válido");
-      return;
-    } if (nuevoUsuario.password === "") {
-      setError("Ingrese su password");
-      return;
-    } if (!regexPas.test(nuevoUsuario.password)) {
-      setError("Ingrese un mínimo de 8 caracteres y un máximo de 15, al menos una letra minúscula, al menos una letra mayúscula, al menos 1 dígito (número), al menos 1 caracter especial, que no existan espacios en blanco.");
-      return;
-    } if (nuevoUsuario.password !== nuevoUsuario.confirmarpassword) {
-      setError("Las contraseñas no coinciden");
+    setSucces('');
+
+    if (nuevoUsuario.nombre === '') {
+      setError('Ingrese su nombre');
       return;
     }
-    setError("");
-    setSucces("Registro exitoso");
+    if (nuevoUsuario.apellido === '') {
+      setError('Ingrese su apellido');
+      return;
+    }
+    if (nuevoUsuario.telefono === '') {
+      setError('Ingrese su número');
+      return;
+    }
+    if (nuevoUsuario.email === '') {
+      setError('Ingrese su email');
+      return;
+    }
+    if (!regexParaEmail.test(nuevoUsuario.email)) {
+      setError('Ingrese un email válido');
+      return;
+    }
+    if (nuevoUsuario.password === '') {
+      setError('Ingrese su contraseña');
+      return;
+    }
+    if (!regexPas.test(nuevoUsuario.password)) {
+      setError(
+        'Ingrese un mínimo de 8 caracteres y un máximo de 15, al menos una letra minúscula, al menos una letra mayúscula, al menos 1 dígito (número), al menos 1 caracter especial, que no existan espacios en blanco.'
+      );
+      return;
+    }
+    if (nuevoUsuario.password !== nuevoUsuario.confirmarpassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
+    setError('');
+
+    console.log('Datos del nuevo usuario:', nuevoUsuario);
   };
 
   return (
@@ -201,8 +215,8 @@ function Registro() {
           </button>
         </div>
         <div className='mensajeRegistro'>
-          {error.length > 0 && <h3 className="error">{error}</h3>}
-          {succes.length > 0 && <h3 className="succes">{succes}</h3>}
+          {error.length > 0 && <div className="alerta alerta-error">{error}</div>}
+          {succes.length > 0 && <div className="alerta alerta-exito">{succes}</div>}
         </div>
       </form>
     </div>
