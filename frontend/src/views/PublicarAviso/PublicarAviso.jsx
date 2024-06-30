@@ -5,17 +5,10 @@ import { validarRutaPublicar } from '../../fuction/funciones'
 import { useNavigate } from 'react-router-dom';
 import './PublicarAviso.css';
 
-/* const formatNumber = (num) => {
-  return num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-};
- */
-
 function PublicarAviso() {
+
   const navigate = useNavigate()
-
-
   const { getDataModelos, modelos, getDataTransmision, transmisiones, getDataEstado, estados, getDataMarca, marcas, getDataCategoria, categorias, logout, login } = useContext(AuthContext)
-
 
   const token = sessionStorage.getItem('token')
   useEffect(() => {
@@ -25,7 +18,7 @@ function PublicarAviso() {
       setVehiculo({ ...vehiculo, "id_usuario": data.usuario.id_usuario })
       if (data.code === 401) {
         alert("Ud no está registrado")
-        navigate('/registro')
+        navigate('/login')
         logout()
       }
     }

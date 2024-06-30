@@ -73,6 +73,21 @@ app.get('/vehiculos/filtros', async (req, res) => {
         res.status(500).send("No se pudo conectar con el servidor")
     }
 })
+// data de una publicacion especifica
+app.get('/detalle/:id_publicacion', async (req,res) => {
+    const {id_publicacion} = req.params
+    const values = [id_publicacion]
+    try {
+        const consulta = `${queryVehiculos} WHERE id_publicacion = $1;`
+        const {rows, rowCount} = await pool.query(consulta, values)
+        if (!rowCount) {
+            res.status(404).send({message: "No se encontró la publicación", code: 404})
+        }
+        res.status(200).send({code: 200, rows})
+    } catch (error) {
+        res.status(500).send("No se pudo conectar con el servidor")
+    }
+})
 
 // data de marcas
 app.get('/marcas', async (req, res) => {
@@ -157,7 +172,7 @@ app.get("/publicar", autenticadorToken, (req, res) => {
     try {
         res.status(200).json({ message: 'Acceso concedido a ruta privada', code: 200, usuario })
     } catch (error) {
-        res.status(401).send({ message: 'Acceso denegado a ruta privada', code: 401})
+        res.status(401).send({ message: 'Acceso denegado a ruta privada', code: 401 })
     }
 })
 
@@ -167,11 +182,20 @@ app.get("/editar-publicacion/:id_publicacion", autenticadorToken, (req, res) => 
 })
 
 app.get("/mis-publicaciones", autenticadorToken, async (req, res) => {
-    const usuario = req.user
-    const id_usuario = usuario.id_usuario
-    const dataMisPub = await getDataMisPub(id_usuario)
-    console.log(dataMisPub)
-    res.status(200).json({ message: 'Acceso concedido a ruta privada', usuario, dataMisPub })
+    try {
+        const usuario = req.user
+        const id_usuario = usuario.id_usuario
+        const dataMisPub = await getDataMisPub(id_usuario)
+        if (!dataMisPub.rowCount ) {
+            return res.status(204).send({ message: 'el usuario tiene acceso, pero no tiene publicaciones', code: 204, usuario})
+        }
+        if (dataMisPub.statusCode === 401) {
+            res.status(401).send({ mesage: "usuario no tiene autorizacion", code: 401 })
+        }
+        res.status(200).json({ message: 'Acceso concedido a ruta privada', code: 200, usuario, dataMisPub })
+    } catch (error) {
+        res.status(500).send({ message: "no se pudo conectar con el servidor", code: 500, error })
+    }
 })
 
 // rutas POST
@@ -232,10 +256,10 @@ app.post('/publicar', async (req, res) => {
     try {
         const vehiculo = req.body
         //const { id_usuario, titulo, precio, id_marca, id_modelo, year, kilometraje, id_transmision, id_categoria, id_estado, descripcion, imagen } = req.body
-        if ( !vehiculo.id_marca || !vehiculo.id_usuario ||  !vehiculo.id_modelo || !vehiculo.id_transmision || !vehiculo.id_categoria || !vehiculo.id_estado) {
+        if (!vehiculo.id_marca || !vehiculo.id_usuario || !vehiculo.id_modelo || !vehiculo.id_transmision || !vehiculo.id_categoria || !vehiculo.id_estado) {
             return res.status(400).send({ message: "faltan datos para poder realizar el registro ", code: 400 })
         }
-        const postPublicacion = await postearPub( vehiculo.id_usuario, vehiculo.titulo, vehiculo.precio, vehiculo.id_marca, vehiculo.id_modelo, vehiculo.year, vehiculo.kilometraje, vehiculo.id_transmision, vehiculo.id_categoria, vehiculo.id_estado, vehiculo.descripcion, vehiculo.imagen)
+        const postPublicacion = await postearPub(vehiculo.id_usuario, vehiculo.titulo, vehiculo.precio, vehiculo.id_marca, vehiculo.id_modelo, vehiculo.year, vehiculo.kilometraje, vehiculo.id_transmision, vehiculo.id_categoria, vehiculo.id_estado, vehiculo.descripcion, vehiculo.imagen)
         res.status(200).send({ message: "La publicación ha sido posteada con éxito", postPublicacion })
     } catch (error) {
         console.log(error)

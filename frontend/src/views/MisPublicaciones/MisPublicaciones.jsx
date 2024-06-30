@@ -1,27 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/Context'
+import { validarRutaPrivada } from '../../fuction/funciones';
 import './MisPublicaciones.css';
 
 function MisPublicaciones() {
+    const [usuarioActual, setUsuarioActual] = useState(null)
     const navigate = useNavigate();
     const [publicaciones, setPublicaciones] = useState([]);
-    const usuarioActual = 1; 
+    const { login, logout } = useContext(AuthContext)
+    const [sinPub, setSinPub] = useState("")
+    // logica para validacion de ruta privada
+    const token = sessionStorage.getItem('token')
+    const url = 'http://localhost:3000/mis-publicaciones'
+
+    const permisos = async () => {
+        const data = await validarRutaPrivada(token, url)
+        if (!data) {
+            setSinPub("No ha realizado publicaciones")
+        } else if (data.code === 401) {
+            alert("Usuario no tiene autorización")
+            navigate('/login')
+            logout()
+        } else if (data.dataMisPub.rowCount) {
+            setPublicaciones(data.dataMisPub.rows)
+            setUsuarioActual(data.usuario.id_usuario)
+        }
+    }
 
     useEffect(() => {
-        obtenerPublicaciones();
+        login()
+        permisos()
     }, []);
-
-    const obtenerPublicaciones = async () => {
-        try {
-            const response = await fetch('/vehiculos.json');
-            const data = await response.json();
-            const publicacionesUsuario = data.filter(pub => pub.id_usuario === usuarioActual);
-            setPublicaciones(publicacionesUsuario);
-        } catch (error) {
-            console.error('Error al obtener publicaciones:', error);
-        }
-    };
-
     const handleVerDetalle = (idPublicacion) => {
         navigate(`/detalle/${idPublicacion}`, { state: { usuarioActual } });
     };
@@ -35,24 +45,35 @@ function MisPublicaciones() {
         setPublicaciones(publicaciones.filter(pub => pub.id_publicacion !== idPublicacion));
     };
 
-    return (
-        <div className="mis-publicaciones-container">
-            <h1 className="mis-publicaciones-title">Mis Publicaciones</h1>
-            <div className="publicaciones-grid">
-                {publicaciones.map((publicacion) => (
-                    <div key={publicacion.id_publicacion} className="publicacion-card">
-                        <img src={publicacion.imagen} alt={publicacion.titulo} />
-                        <h2 className="publicacion-title">{publicacion.titulo}</h2>
-                        <div className="botones-container">
-                            <button className='boton-MisPublicaciones' onClick={() => handleVerDetalle(publicacion.id_publicacion)}>Detalle</button>
-                            <button className='boton-MisPublicaciones' onClick={() => handleEditar(publicacion.id_publicacion)}>Editar</button>
-                            <button className='boton-MisPublicaciones' onClick={() => handleEliminar(publicacion.id_publicacion)}>Eliminar</button>
+    if (sinPub === "") {
+        return (
+            <div className="mis-publicaciones-container">
+                <h1 className="mis-publicaciones-title">Mis Publicaciones</h1>
+                <div className="publicaciones-grid">
+                    {publicaciones?.map((publicacion) => (
+                        <div key={publicacion.id_publicacion} className="publicacion-card">
+                            <img src={publicacion.imagen} alt={publicacion.titulo} />
+                            <h2 className="publicacion-title">{publicacion.titulo}</h2>
+                            <div className="botones-container">
+                                <button className='boton-MisPublicaciones' onClick={() => handleVerDetalle(publicacion.id_publicacion)}>Detalle</button>
+                                <button className='boton-MisPublicaciones' onClick={() => handleEditar(publicacion.id_publicacion)}>Editar</button>
+                                <button className='boton-MisPublicaciones' onClick={() => handleEliminar(publicacion.id_publicacion)}>Eliminar</button>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
-        </div>
-    );
+        );
+    } else {
+        return (
+            <div className="mis-publicaciones-container">
+                <h1 className="mis-publicaciones-title">Mis Publicaciones</h1>
+                <div className="publicaciones-grid">
+                    <div>{sinPub}</div>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default MisPublicaciones;
