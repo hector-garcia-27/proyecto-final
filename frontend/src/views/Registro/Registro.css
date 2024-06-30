@@ -77,6 +77,29 @@
   color: red;
 }
 
+.alerta {
+  margin-top: 15px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.alerta-error {
+  color: #f10804;
+  background-color: #e99393;
+  border-color: #631c28;
+}
+
+.alerta-exito {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+
+
 @media (max-width: 768px) {
   .contenedor-registro {
     margin: 10px auto;
@@ -147,7 +170,7 @@
 }
 
 .input-registro-codigo {
-  width: 10%; /* Ancho del input del código */
+  width: 10%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -155,7 +178,7 @@
 }
 
 .input-telefono-registro {
-  width: 90%; /* Ancho del input del teléfono */
+  width: 90%; 
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
