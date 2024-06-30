@@ -1,80 +1,78 @@
-.contenedor-editar-perfil{
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    margin-top: 50px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 1px 18px #76ABAE;
-  }
-  
-  .titulo-editar-perfil {
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .boton-editar-perfil{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  
-  .formulario-editar-perfil {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .campo-editar {
-    margin-bottom: 15px;
-    width: 100%;
-  }
-  
- .label-editar {
-    margin-bottom: 5px;
-  }
-  
-  .input-editar[type="text"],
-  .input-editar[type="email"],
-  .input-editar[type="tel"],
-  .input-editar[type="file"],
-  .input-editar[type="password"]
-  {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-  
-  .imagen-editar {
-    max-width: 100%;
-    margin-top: 10px;
-    border-radius: 4px;
-    object-fit: cover;
-    height: 200px; 
-  }
-  
-  .boton-guardar-editar {
-    background-color: #76ABAE;
-    color: #fff;
-    border: none;
-    padding: 12px 20px;
-    font-size: 18px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    width: 150px; 
-    margin-top: 20px; 
-  }
-  
-  .boton-guardar-editar :hover {
-    background-color: #31363F;
-  }
-  
-.error{
+.contenedor-editar-perfil {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  margin-top: 50px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 1px 18px #76ABAE;
+}
+
+.titulo-editar-perfil {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.boton-editar-perfil {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.formulario-editar-perfil {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.campo-editar {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.label-editar {
+  margin-bottom: 5px;
+}
+
+.input-editar[type='text'],
+.input-editar[type='email'],
+.input-editar[type='tel'],
+.input-editar[type='file'],
+.input-editar[type='password'] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.imagen-editar {
+  max-width: 100%;
+  margin-top: 10px;
+  border-radius: 4px;
+  object-fit: cover;
+  height: 200px;
+}
+
+.boton-guardar-editar {
+  background-color: #76ABAE;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 150px;
+  margin-top: 20px;
+}
+
+.boton-guardar-editar:hover {
+  background-color: #31363F;
+}
+
+.error {
   font-size: 20px;
   color: red;
 }
@@ -97,11 +95,11 @@
     width: 130px;
   }
 
-  .input-editar[type="text"],
-  .input-editar[type="email"],
-  .input-editar[type="tel"],
-  .input-editar[type="file"],
-  .input-editar[type="password"] {
+  .input-editar[type='text'],
+  .input-editar[type='email'],
+  .input-editar[type='tel'],
+  .input-editar[type='file'],
+  .input-editar[type='password'] {
     padding: 8px;
     font-size: 14px;
   }
@@ -129,11 +127,11 @@
     width: 100px;
   }
 
-  .input-editar[type="text"],
-  .input-editar[type="email"],
-  .input-editar[type="tel"],
-  .input-editar[type="file"],
-  .input-editar[type="password"] {
+  .input-editar[type='text'],
+  .input-editar[type='email'],
+  .input-editar[type='tel'],
+  .input-editar[type='file'],
+  .input-editar[type='password'] {
     padding: 6px;
     font-size: 12px;
   }
@@ -141,4 +139,25 @@
   .error {
     font-size: 14px;
   }
+}
+
+.codigo-telefono-container {
+  display: flex;
+  gap: 10px;
+}
+
+.input-codigo-telefono {
+  width: 10%; /* Ancho del input del código */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.input-telefono{
+  width: 90%; /* Ancho del input del teléfono */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
 }
