@@ -5,10 +5,10 @@ import { validarRutaPublicar } from '../../fuction/funciones'
 import { useNavigate } from 'react-router-dom';
 import './PublicarAviso.css';
 
-const formatNumber = (num) => {
+/* const formatNumber = (num) => {
   return num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
-
+ */
 
 function PublicarAviso() {
   const navigate = useNavigate()
@@ -22,14 +22,12 @@ function PublicarAviso() {
     login()
     const permisos = async () => {
       const data = await validarRutaPublicar(token)
-      setId_usurio(data.usuario.id_usuario)
       setVehiculo({ ...vehiculo, "id_usuario": data.usuario.id_usuario })
       if (data.code === 401) {
-        navigate('/login')
+        alert("Ud no está registrado")
+        navigate('/registro')
         logout()
-        return
       }
-      //setId_usurio(data.usuario.id_usuario)
     }
     permisos()
     getDataTransmision()
@@ -38,10 +36,7 @@ function PublicarAviso() {
     getDataCategoria()
   }, [])
 
-  const [id_usuario, setId_usurio] = useState("")
-  console.log(id_usuario)
-
-  const [vehiculo, setVehiculo] = useState([]);
+  const [vehiculo, setVehiculo] = useState({});
   const [error, setError] = useState("")
 
   const cambioDeMarca = (event) => {
@@ -52,16 +47,7 @@ function PublicarAviso() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
-    // Si el campo es 'precio', elimina los puntos para que se pueda formatear correctamente
-    if (name === 'precio' || name === 'kilometros') {
-      const rawValue = value.replace(/\./g, '');
-      if (!isNaN(Number(rawValue))) {
-        setVehiculo({ ...vehiculo, [name]: formatNumber(rawValue) });
-      }
-    } else {
-      setVehiculo({ ...vehiculo, [name]: value });
-    }
+    setVehiculo({ ...vehiculo, [name]: value });
   };
 
   const handleImageChange = (event) => {
@@ -71,13 +57,9 @@ function PublicarAviso() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    if (id_usuario) {
-      peticionPublicarPost()
-    }
+    peticionPublicarPost()
   };
 
-  /* const datosDePub = { vehiculo, id_usuario: id_usuario }
-  console.log("dtpub", datosDePub) */
   const peticionPublicarPost = async () => {
     try {
       const res = await fetch('http://localhost:3000/publicar', {
@@ -85,7 +67,7 @@ function PublicarAviso() {
         headers: {
           'content-type': 'application/json',
         },
-        body: JSON.stringify( vehiculo )
+        body: JSON.stringify(vehiculo)
       })
 
       if (res.status === 400) {
@@ -105,10 +87,10 @@ function PublicarAviso() {
     }
   }
 
-
   const getModeloPorMarca = (id) => {
     getDataModelos(id)
   };
+
   return (
 
     <div className="container-publicar-aviso">
@@ -128,7 +110,7 @@ function PublicarAviso() {
 
           <label className="label-publicar-aviso">
             Estado
-            <select type="text" name="estado" value={vehiculo.estado} onChange={handleChange} required >
+            <select type="text" name="id_estado" value={vehiculo.id_estado} onChange={handleChange} required >
               <option value="">Seleccione</option>
               {estados?.map((estado, index) =>
                 <option value={estado.id_estado} key={index}>{estado.nombre}</option>
@@ -140,8 +122,8 @@ function PublicarAviso() {
             Categoría
             <select className='input-publicar-aviso'
               type="text"
-              name="categoria"
-              value={vehiculo.categoria}
+              name="id_categoria"
+              value={vehiculo.id_categoria}
               onChange={handleChange}
               required
             >
@@ -157,8 +139,8 @@ function PublicarAviso() {
             Marca
             <select className='input-publicar-aviso'
               type="text"
-              name="marca"
-              value={vehiculo.marca}
+              name="id_marca"
+              value={vehiculo.id_marca}
               onChange={cambioDeMarca}
               required
             >
@@ -172,14 +154,14 @@ function PublicarAviso() {
             Modelo
             <select className='input-publicar-aviso'
               type="text"
-              name="modelo"
-              value={vehiculo.modelo}
-              disabled={!vehiculo.marca}
+              name="id_modelo"
+              value={vehiculo.id_modelo}
+              disabled={!vehiculo.id_marca}
               onChange={handleChange}
               required
             >
               <option value="">Modelo</option>
-              {modelos.map((modelo, index) =>
+              {modelos?.map((modelo, index) =>
                 <option value={modelo.id_modelo} key={index}>{modelo.nombre}</option>
               )}
             </select>
@@ -215,7 +197,7 @@ function PublicarAviso() {
         <div className="inline-fields">
           <label className="label-publicar-aviso">
             Transmisión
-            <select className='input-publicar-aviso' type="text" name="transmision" value={vehiculo.transmision} onChange={handleChange} required>
+            <select className='input-publicar-aviso' type="text" name="id_transmision" value={vehiculo.id_transmision} onChange={handleChange} required>
               <option value="">Transmisión</option>
               {transmisiones?.map((transmision, index) =>
                 <option value={transmision.id_transmision} key={index}>{transmision.nombre}</option>
@@ -254,6 +236,9 @@ function PublicarAviso() {
 
         <div className='btn-publicar'>
           <button type="submit" className="boton-publicar-aviso">Publicar</button>
+        </div>
+        <div>
+          {`${error}`}
         </div>
       </form >
     </div >
