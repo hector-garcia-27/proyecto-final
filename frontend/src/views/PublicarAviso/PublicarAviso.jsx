@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { opciones } from "../../../public/opciones";
 import { AuthContext } from '../../context/Context'
+import { validarRutaPublicar } from '../../fuction/funciones'
+import { useNavigate } from 'react-router-dom';
 import './PublicarAviso.css';
 
 const formatNumber = (num) => {
@@ -9,13 +11,28 @@ const formatNumber = (num) => {
 
 
 function PublicarAviso() {
+  const navigate = useNavigate()
 
-  const { getDataModelos, modelos, getDataTransmision, transmisiones, getDataEstado, estados, getDataMarca, marcas, getDataCategoria, categorias } = useContext(AuthContext)
+
+  const { getDataModelos, modelos, getDataTransmision, transmisiones, getDataEstado, estados, getDataMarca, marcas, getDataCategoria, categorias, logout } = useContext(AuthContext)
+
+
+  const token = sessionStorage.getItem('token')
   useEffect(() => {
+    const permisos = async () => {
+      const data = await validarRutaPublicar(token)
+      if (data.code === 401) {
+        navigate('/login')
+        logout()
+        return
+      }
+    }
+    permisos()
     getDataTransmision()
     getDataEstado()
     getDataMarca()
     getDataCategoria()
+
   }, [])
 
   const [vehiculo, setVehiculo] = useState({

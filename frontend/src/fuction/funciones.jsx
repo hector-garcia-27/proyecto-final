@@ -8,10 +8,25 @@ export async function validacionRutaPerfil(token) {
                 }
             })
             const data = await res.json()
-            console.log("validacionRutaPerfil", data)
             return data
         } catch (error) {
             console.log("error")
         }
     }
 
+export async function validarRutaPublicar (token) {
+    try {
+        const res = await fetch('http://localhost:3000/publicar', {
+            method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'accept': 'application/json'
+                }
+        })
+        const data = await res.json()
+        
+        return data
+    } catch (error) {
+        
+    }
+}

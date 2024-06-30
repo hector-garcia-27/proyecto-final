@@ -9,9 +9,8 @@ import { AuthContext } from '../../context/Context'
 function Perfil() {
 
   const { login, logout } = useContext(AuthContext)
-
+  const token = sessionStorage.getItem('token')
   useEffect(() => {
-    const token = sessionStorage.getItem('token')
     const permisos = async () => {
       const data = await validacionRutaPerfil(token)
       if (data === "Usuario no tiene autorizacion") {

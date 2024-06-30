@@ -155,9 +155,9 @@ app.get("/editar-perfil", autenticadorToken, (req, res) => {
 app.get("/publicar", autenticadorToken, (req, res) => {
     const usuario = req.user
     try {
-        res.status(200).json({ message: 'Acceso concedido a ruta privada', usuario })
+        res.status(200).json({ message: 'Acceso concedido a ruta privada', code: 200, usuario })
     } catch (error) {
-        res.status(500).send('Sin acceso')
+        res.status(401).send({ message: 'Acceso denegado a ruta privada', code: 401})
     }
 })
 
@@ -216,7 +216,6 @@ app.post('/login', async (req, res) => {
                 id_usuario: usuarioVerificado.rows[0].id_usuario
             }, key)
             res.status(200).send({ token })
-            console.log(token)
         }
     } catch (error) {
         console.log(error)
