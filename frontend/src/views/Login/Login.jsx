@@ -72,7 +72,9 @@ function Login() {
             }
 
         } catch (error) {
-            // falta el error
+            setError("No se pudo contactar con el servidor")
+            alert ("Error 500 al contactar con el servidor")// falta el error
+            console.log(error)
         }
 
     }

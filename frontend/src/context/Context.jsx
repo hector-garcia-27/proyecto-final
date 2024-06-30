@@ -4,7 +4,7 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
     // autenticacion provisional del navbar
-    
+
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 
@@ -66,7 +66,7 @@ const AuthProvider = ({ children }) => {
             const dataTransmisiones = await res.json()
             setTransmisiones(dataTransmisiones)
         } catch (error) {
-            
+
         }
     }
 
@@ -86,7 +86,6 @@ const AuthProvider = ({ children }) => {
     }
 
     const login = () => {
-        
         setIsAuthenticated(true);
     };
 
@@ -97,7 +96,7 @@ const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{getDataModelos, modelos, isAuthenticated, login, logout, getDataEstado, estados, getDataVehiculos, setDataCompletaVehiculos, dataCompletaVehiculos, getDataMarca, marcas, getDataCategoria, categorias, getDataTransmision, transmisiones }}>
+        <AuthContext.Provider value={{ getDataModelos, modelos, isAuthenticated, login, logout, getDataEstado, estados, getDataVehiculos, setDataCompletaVehiculos, dataCompletaVehiculos, getDataMarca, marcas, getDataCategoria, categorias, getDataTransmision, transmisiones }}>
             {children}
         </AuthContext.Provider>
     );

@@ -29,7 +29,7 @@ function App() {
           <Route path='/registro' element={<Registro />} />
           <Route path='/login' element={<Login />} />
           <Route path='/publicar' element={<PublicarAviso />} />
-          <Route path='/detalle/:id' element={<Detalle />} />
+          <Route path='/detalle/:id_publicacion' element={<Detalle />} />
           <Route path='/editar-perfil' element={<EditarPerfil />} />
           <Route path='/editar-publicacion/:id' element={<EditarPublicacion />} />
           <Route path='/mis-publicaciones' element={<MisPublicaciones />} />

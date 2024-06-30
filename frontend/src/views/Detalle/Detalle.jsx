@@ -11,21 +11,25 @@ import { IoLogoModelS } from "react-icons/io";
 import { LiaClipboardListSolid } from "react-icons/lia";
 
 function Detalle() {
-    const { id } = useParams();
+    const { id_publicacion } = useParams();
     const location = useLocation();
     const usuarioActual = location.state?.usuarioActual || null;
-    const [vehiculo, setVehiculo] = useState(null);
+    const [vehiculo, setVehiculo] = useState({});
 
     useEffect(() => {
-        fetchDataVehiculo(id);
-    }, [id]);
+        fetchDataVehiculo(id_publicacion);
+    }, []);
 
-    const fetchDataVehiculo = async (id) => {
+    const fetchDataVehiculo = async (id_publicacion) => {
         try {
-            const res = await fetch('/vehiculos.json');
-            const vehiculos = await res.json();
-            const vehiculo = vehiculos.find((v) => v.id_publicacion === parseInt(id, 10));
-            setVehiculo(vehiculo);
+            const res = await fetch(`http://localhost:3000/detalle/${id_publicacion}`);
+            const data = await res.json();
+            if (data.code === 404) {
+                alert ("Publicacion no encontrada")
+            }
+            if(data.code === 200){
+                setVehiculo(data.rows[0]);
+            }
         } catch (error) {
             console.error('Error fetching vehiculo:', error);
         }
@@ -35,9 +39,6 @@ function Detalle() {
         alert(`Contactar al vendedor del vehículo con ID: ${vehiculoId}`);
     };
 
-    if (!vehiculo) {
-        return <div>Cargando...</div>;
-    }
 
     const esPropietario = vehiculo.id_usuario === usuarioActual;
 
