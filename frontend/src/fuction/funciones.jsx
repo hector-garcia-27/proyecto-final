@@ -24,7 +24,7 @@ export async function validarRutaPublicar (token) {
                 }
         })
         const data = await res.json()
-        
+        console.log(data)
         return data
     } catch (error) {
         

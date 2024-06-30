@@ -230,11 +230,13 @@ app.post('/login', async (req, res) => {
 // publicar
 app.post('/publicar', async (req, res) => {
     try {
-        const { id_usuario, titulo, precio, id_marca, id_modelo, year, kilometraje, id_transmision, id_categoria, id_estado, descripcion, imagen } = req.body
-        if (!id_usuario || !id_marca || !id_modelo || !id_transmision || !id_categoria || !id_estado) {
-            return res.status(500).send({ message: "faltan datos para poder realizar el registro ", code: 500 })
+        const {vehiculo} = req.query
+        console.log(vehiculo)
+        //const { id_usuario, titulo, precio, id_marca, id_modelo, year, kilometraje, id_transmision, id_categoria, id_estado, descripcion, imagen } = req.body
+        if ( !vehiculo.id_marca || !vehiculo.id_usuario ||  !vehiculo.id_modelo || !vehiculo.id_transmision || !vehiculo.id_categoria || !vehiculo.id_estado) {
+            return res.status(400).send({ message: "faltan datos para poder realizar el registro ", code: 400 })
         }
-        const postPublicacion = await postearPub(id_usuario, titulo, precio, id_marca, id_modelo, year, kilometraje, id_transmision, id_categoria, id_estado, descripcion, imagen)
+        const postPublicacion = await postearPub( id_usuario, vehiculo.titulo, vehiculo.precio, vehiculo.id_marca, vehiculo.id_modelo, vehiculo.year, vehiculo.kilometraje, vehiculo.id_transmision, vehiculo.id_categoria, vehiculo.id_estado, vehiculo.descripcion, vehiculo.imagen)
         res.status(200).send({ message: "La publicación ha sido posteada con éxito", postPublicacion })
     } catch (error) {
         console.log(error)
