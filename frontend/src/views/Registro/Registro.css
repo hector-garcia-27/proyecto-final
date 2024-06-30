@@ -1,80 +1,163 @@
-.contenedor-registro{
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    margin-top: 50px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 1px 18px #76ABAE;
-  }
-  
-  .titulo-registro {
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .boton-registro{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  
-  .formulario-registro {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-  
-  .campo-registro {
-    margin-bottom: 15px;
-    width: 100%;
-  }
-  
- .label-registro {
-    margin-bottom: 5px;
-  }
-  
-  .input-registro[type="text"],
-  .input-registro[type="email"],
-  .input-registro[type="tel"],
-  .input-registro[type="file"],
-  .input-registro[type="password"]
-  {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-  
-  .imagen-registro {
-    max-width: 100%;
-    margin-top: 10px;
-    border-radius: 4px;
-    object-fit: cover;
-    height: 200px; 
-  }
-  
-  .boton-guardar-registro {
-    background-color: #76ABAE;
-    color: #fff;
-    border: none;
-    padding: 12px 20px;
-    font-size: 18px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    width: 150px; 
-    margin-top: 20px; 
-  }
-  
-  .boton-guardar-registro :hover {
-    background-color: #31363F;
-  }
-  
-.error{
+.contenedor-registro {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  margin-top: 50px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 1px 18px #76ABAE;
+}
+
+.titulo-registro {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.boton-registro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.formulario-registro {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.campo-registro {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.label-registro {
+  margin-bottom: 5px;
+}
+
+.input-registro[type="text"],
+.input-registro[type="email"],
+.input-registro[type="tel"],
+.input-registro[type="file"],
+.input-registro[type="password"] {
+  width: 100%; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.imagen-registro {
+  max-width: 100%;
+  margin-top: 10px;
+  border-radius: 4px;
+  object-fit: cover;
+  height: 200px;
+}
+
+.boton-guardar-registro {
+  background-color: #76ABAE;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 150px;
+  margin-top: 20px;
+}
+
+.boton-guardar-registro:hover {
+  background-color: #31363F;
+}
+
+.error {
   font-size: 20px;
   color: red;
+}
+
+@media (max-width: 768px) {
+  .contenedor-registro {
+    margin: 10px auto;
+    padding: 15px;
+    margin-top: 30px;
+  }
+
+  .titulo-registro {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  .boton-guardar-registro {
+    padding: 10px 15px;
+    font-size: 16px;
+    width: 130px;
+  }
+
+  .input-registro[type='text'],
+  .input-registro[type='email'],
+  .input-registro[type='tel'],
+  .input-registro[type='file'],
+  .input-registro[type='password'] {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .error {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contenedor-registro {
+    margin: 5px auto;
+    padding: 10px;
+    margin-top: 20px;
+  }
+
+  .titulo-registro {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .boton-guardar-registro {
+    padding: 8px 10px;
+    font-size: 14px;
+    width: 100px;
+  }
+
+  .input-registro[type='text'],
+  .input-registro[type='email'],
+  .input-registro[type='tel'],
+  .input-registro[type='file'],
+  .input-registro[type='password'] {
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  .error {
+    font-size: 14px;
+  }
+}
+
+.codigo-telefono-registro {
+  display: flex;
+  gap: 10px;
+}
+
+.input-registro-codigo {
+  width: 10%; /* Ancho del input del código */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.input-telefono-registro {
+  width: 90%; /* Ancho del input del teléfono */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
 }
