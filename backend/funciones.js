@@ -24,9 +24,8 @@ const getDataPerfil = async (id_usuario) => {
     const consulta = "SELECT * FROM usuarios WHERE id_usuario = $1;"
     const values = [id_usuario]
     const { rows, rowCount } = await pool.query(consulta, values)
-    console.log(rows)
     if (!rowCount) {
-        return { message: `El usuaruio con id ${id_usuario} no fue encontrado` }
+        return ""
     } else {
         return rows[0]
     }

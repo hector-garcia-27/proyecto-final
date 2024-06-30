@@ -8,7 +8,7 @@ export async function validacionRutaPerfil(token) {
                 }
             })
             const data = await res.json()
-            console.log(data)
+            console.log("validacionRutaPerfil", data)
             return data
         } catch (error) {
             console.log("error")

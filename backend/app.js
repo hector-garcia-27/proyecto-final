@@ -133,11 +133,18 @@ app.get('/categorias', async (req, res) => {
 
 // rutas GET privadas
 app.get("/perfil", autenticadorToken, async (req, res) => {
-    const usuario = req.user
-    const id_usuario = usuario.id_usuario
-    console.log(id_usuario)
-    const dataPerfil = await getDataPerfil(id_usuario)
-    res.status(200).json([dataPerfil])
+    try {
+        const usuario = req.user
+        const id_usuario = usuario.id_usuario
+        const dataPerfil = await getDataPerfil(id_usuario)
+        if (dataPerfil === "") {
+            res.status(404).send("Usuario no tiene autorizacion")
+        }
+        res.status(200).json([dataPerfil])
+    } catch (error) {
+        res.status(500).send("Usuario no tiene autorizacion")
+    }
+
 })
 
 app.get("/editar-perfil", autenticadorToken, (req, res) => {
@@ -147,7 +154,11 @@ app.get("/editar-perfil", autenticadorToken, (req, res) => {
 
 app.get("/publicar", autenticadorToken, (req, res) => {
     const usuario = req.user
-    res.status(200).json({ message: 'Acceso concedido a ruta privada', usuario })
+    try {
+        res.status(200).json({ message: 'Acceso concedido a ruta privada', usuario })
+    } catch (error) {
+        res.status(500).send('Sin acceso')
+    }
 })
 
 app.get("/editar-publicacion/:id_publicacion", autenticadorToken, (req, res) => {
