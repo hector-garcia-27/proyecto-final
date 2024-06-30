@@ -14,40 +14,35 @@ function PublicarAviso() {
   const navigate = useNavigate()
 
 
-  const { getDataModelos, modelos, getDataTransmision, transmisiones, getDataEstado, estados, getDataMarca, marcas, getDataCategoria, categorias, logout } = useContext(AuthContext)
+  const { getDataModelos, modelos, getDataTransmision, transmisiones, getDataEstado, estados, getDataMarca, marcas, getDataCategoria, categorias, logout, login } = useContext(AuthContext)
 
 
   const token = sessionStorage.getItem('token')
   useEffect(() => {
+    login()
     const permisos = async () => {
       const data = await validarRutaPublicar(token)
+      setId_usurio(data.usuario.id_usuario)
+      setVehiculo({ ...vehiculo, "id_usuario": data.usuario.id_usuario })
       if (data.code === 401) {
         navigate('/login')
         logout()
         return
       }
+      //setId_usurio(data.usuario.id_usuario)
     }
     permisos()
     getDataTransmision()
     getDataEstado()
     getDataMarca()
     getDataCategoria()
-
   }, [])
 
-  const [vehiculo, setVehiculo] = useState({
-    titulo: '',
-    precio: '',
-    estado: '',
-    marca: '',
-    modelo: '',
-    año: '',
-    kilometros: '',
-    transmision: '',
-    categoria: '',
-    descripcion: '',
-    imagen: null
-  });
+  const [id_usuario, setId_usurio] = useState("")
+  console.log(id_usuario)
+
+  const [vehiculo, setVehiculo] = useState([]);
+  const [error, setError] = useState("")
 
   const cambioDeMarca = (event) => {
     const { name, value } = event.target;
@@ -75,19 +70,42 @@ function PublicarAviso() {
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-
-    // Validación adicional para el campo "estado"
-    if (vehiculo.estado === '') {
-      alert('Por favor, selecciona el estado del vehículo (Nuevo o Usado).');
-      return;
+    event.preventDefault()
+    if (id_usuario) {
+      peticionPublicarPost()
     }
-
-    console.log('Datos del vehículo:', vehiculo);
-    alert('Datos enviados exitosamente. Revisa la consola para ver los datos.');
   };
 
-  // falta dejar mapeados los select ya que los datos se deben seleccionar 
+  /* const datosDePub = { vehiculo, id_usuario: id_usuario }
+  console.log("dtpub", datosDePub) */
+  const peticionPublicarPost = async () => {
+    try {
+      const res = await fetch('http://localhost:3000/publicar', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify( vehiculo )
+      })
+
+      if (res.status === 400) {
+        setError("Faltan datos en la solicitud")
+      }
+      if (res.status === 500) {
+        setError("Error de conexión con el servidor")
+      }
+      if (res.status === 200) {
+        alert("la publicacion se realizó correctamente")
+        setVehiculo({})
+        setError("")
+      }
+    } catch (error) {
+      console.log(error)
+      setError("Error de conexión con el servidor")
+    }
+  }
+
+
   const getModeloPorMarca = (id) => {
     getDataModelos(id)
   };
@@ -172,7 +190,7 @@ function PublicarAviso() {
             Año
             <select className='input-publicar-aviso'
               type="number"
-              name="año"
+              name="year"
               value={vehiculo.año}
               onChange={handleChange}
               required
@@ -230,15 +248,14 @@ function PublicarAviso() {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            required
           />
         </label>
         {vehiculo.imagen && <img src={vehiculo.imagen} alt="Vehículo" className="imagen-publicar-aviso" />}
-      </form >
 
-      <div className='btn-publicar'>
-        <button type="submit" className="boton-publicar-aviso">Publicar</button>
-      </div>
+        <div className='btn-publicar'>
+          <button type="submit" className="boton-publicar-aviso">Publicar</button>
+        </div>
+      </form >
     </div >
 
   );
