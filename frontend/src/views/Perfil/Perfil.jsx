@@ -7,23 +7,25 @@ import { validacionRutaPerfil } from '../../fuction/funciones'
 import { AuthContext } from '../../context/Context'
 
 function Perfil() {
-  
-  const { login } = useContext(AuthContext)
 
+  const { login, logout } = useContext(AuthContext)
+  const token = sessionStorage.getItem('token')
   useEffect(() => {
-    const token = sessionStorage.getItem('token')
     const permisos = async () => {
       const data = await validacionRutaPerfil(token)
-      if (data) {
-        setUsuario(data[0])
+      if (data === "Usuario no tiene autorizacion") {
+        console.log("data es ", data)
+        alert("usuario sin credenciales")
+        logout()
+        navigate('/login')
       } else {
-        console.log("error al cargar la data")
+        setUsuario(data[0])
+        login()
       }
     }
     permisos()
-    login()
   }, [])
-  
+
   const [usuario, setUsuario] = useState([])// con la validacion del token debemos setear en Usuario con los datos correspondientes);
 
   const navigate = useNavigate();

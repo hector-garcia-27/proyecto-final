@@ -5,7 +5,6 @@ const key = process.env.LLAVESECRETA
 const autenticadorToken = (req, res, next) => {
     const credenciales = req.headers.authorization
     if (!credenciales) {
-        console.log("no hay credenciales")
         return res.status(401).send({ message: "Sin autorización, cabecera sin credenciales" })
     }
     const [bearer, token] = credenciales.split(" ")
