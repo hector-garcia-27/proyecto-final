@@ -32,8 +32,8 @@
 
 .form-vehiculo {
     display: flex;
-  flex-direction: column;
-  width: 100%;
+    flex-direction: column;
+    width: 100%;
 }
 
 label {
@@ -64,7 +64,7 @@ select {
 textarea {
     padding: 10px;
     height: 150px;
-    resize: vertical; 
+    resize: vertical;
 }
 
 .imagen-vehiculo {
@@ -79,11 +79,12 @@ textarea {
 
 .btn-editar {
     padding-top: 10px;
-  
-  }
-  
-  .boton-editar-aviso {
-  
+    display: flex;
+    justify-content: center;
+}
+
+.boton-editar-aviso {
+
     background-color: #76ABAE;
     color: #fff;
     border: none;
@@ -93,7 +94,7 @@ textarea {
     cursor: pointer;
     width: 150px;
     margin-top: 20px;
-  }
+}
 
 .boton-publicar:hover {
     background-color: #31363F;

@@ -31,7 +31,7 @@ function App() {
           <Route path='/publicar' element={<PublicarAviso />} />
           <Route path='/detalle/:id_publicacion' element={<Detalle />} />
           <Route path='/editar-perfil' element={<EditarPerfil />} />
-          <Route path='/editar-publicacion/:id' element={<EditarPublicacion />} />
+          <Route path='/editar-publicacion/:id_publicacion' element={<EditarPublicacion />} />
           <Route path='/mis-publicaciones' element={<MisPublicaciones />} />
           <Route path='/perfil' element={<Perfil />} />
         </Routes>

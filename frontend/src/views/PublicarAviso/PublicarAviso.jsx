@@ -51,6 +51,7 @@ function PublicarAviso() {
   const handleSubmit = (event) => {
     event.preventDefault()
     peticionPublicarPost()
+    setVehiculo({})
   };
 
   const peticionPublicarPost = async () => {
@@ -71,7 +72,6 @@ function PublicarAviso() {
       }
       if (res.status === 200) {
         alert("la publicacion se realizó correctamente")
-        setVehiculo({})
         setError("")
       }
     } catch (error) {
