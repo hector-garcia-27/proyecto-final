@@ -1,61 +1,86 @@
 import './EditarPublicacion.css'
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
+import { AuthContext } from '../../context/Context'
 import { opciones } from "../../../public/opciones"; // de aca nos estamos trayendo las opciones que deberian estar en la base de datos, para poder mapear las opciones disponibles
 import { useParams, useNavigate } from 'react-router-dom';
-
-const formatNumber = (num) => {
-    return num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  };
+import { validarRutaPrivada } from '../../fuction/funciones';
 
 function EditarPublicacion() {
+
     const navigate = useNavigate();
-    const { id } = useParams();
-    const [vehiculoEditado, setVehiculoEditado] = useState({
+    const { getDataModelos, modelos, getDataTransmision, transmisiones, getDataEstado, estados, getDataMarca, marcas, getDataCategoria, categorias, logout, login } = useContext(AuthContext)
+    const { id_publicacion } = useParams();
+    const vNull = {
         titulo: '',
         precio: '',
-        estado: '',
-        marca: '',
-        modelo: '',
-        año: '',
-        kilometros: '',
-        transmision: '',
-        categoria: '',
+        id_estado: '',
+        id_marca: '',
+        id_modelo: '',
+        year: '',
+        kilometraje: '',
+        id_transmision: '',
+        id_categoria: '',
         descripcion: '',
         imagen: '',
-    });
+    }
+    const [vehiculoEditado, setVehiculoEditado] = useState(vNull);
+    const token = sessionStorage.getItem('token')
+    const url = 'http://localhost:3000/editar-publicacion'
 
-    useEffect(() => {
-        getPublicacionById(id) // llamado a la api de la data de la publicacionque estamos editando
-    }, [id])
-
-    const getPublicacionById = async (id) => {
-        try {
-            const res = await fetch(`/vehiculos/${id}`);
-            const dataDePublicacion = await res.json();
-            setVehiculoEditado(dataDePublicacion);
-        } catch (error) {
-            console.log("Error al obtener la publicación:", error);
+    const permisos = async () => {
+        const data = await validarRutaPrivada(token, url)
+        if (data.code === 401) {
+            alert('Usuario sin autorización')
+            navigate('/login')
+            logout()
+        } else {
+            login()
+            console.log(`usuario ${data.usuario.nombre} autorizado`)
         }
-    };
+    }
+    useEffect(() => {
+        permisos()
+        getDataTransmision()
+        getDataEstado()
+        getDataMarca()
+        getDataCategoria()
+    }, [])
 
-    const handleChangeMarca = (event) => {
+    //peticion PUT a la api
+    const editarPublicacion = async () => {
+        try {
+            const res = await fetch(`http://localhost:3000/editar-publicacion/${id_publicacion}`, {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify(vehiculoEditado)
+            })
+            if (res.ok) {
+                alert("Publicación actualizada con exito")
+                navigate('/mis-publicaciones')
+                return 
+            }
+            if (!res.ok) {
+                setVehiculoEditado(vNull)
+                return alert ("No se pudo actualizar la Publicacion")
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const cambioDeMarca = (event) => {
         const { name, value } = event.target;
         setVehiculoEditado({ ...vehiculoEditado, [name]: value });
+        getModeloPorMarca(value)
     };
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-    
-        // Si el campo es 'precio', elimina los puntos para que se pueda formatear correctamente
-        if (name === 'precio' || name === 'kilometros') {
-          const rawValue = value.replace(/\./g, '');
-          if (!isNaN(Number(rawValue))) {
-            setVehiculoEditado({ ...vehiculoEditado, [name]: formatNumber(rawValue) });
-          }
-        } else {
-          setVehiculoEditado({ ...vehiculoEditado, [name]: value });
-        }
-      };
+        setVehiculoEditado({ ...vehiculoEditado, [name]: value });
+    };
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -64,15 +89,13 @@ function EditarPublicacion() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // hacer la peticion PUT con el id_publicacion para actualizar
-        console.log('Datos del vehículo:', vehiculoEditado);
-        alert('Datos enviados exitosamente. Revisa la consola para ver los datos.');
-        navigate('/mis-publicaciones')
+        editarPublicacion()
+        
+        
     };
 
-    const getModeloPorMarca = (marca) => {
-        const marcaElegida = opciones[0].opcionMarcaYModelo.find(element => element.nombre === marca);
-        return marcaElegida ? marcaElegida.modelos : [];
+    const getModeloPorMarca = (id_marca) => {
+        getDataModelos(id_marca)
     };
 
     return (
@@ -95,28 +118,28 @@ function EditarPublicacion() {
                     <label>
                         Estado
                         <select
-                            name="estado"
-                            value={vehiculoEditado.estado}
+                            name="id_estado"
+                            value={vehiculoEditado.id_estado}
                             onChange={handleChange}
                             required
                         >
                             <option value="">Estado</option>
-                            {opciones[0].opcionesEstado?.map((estado, index) =>
-                                <option value={estado} key={index} >{estado}</option>
+                            {estados?.map((estado, index) =>
+                                <option value={estado.id_estado} key={index} >{estado.nombre}</option>
                             )}
                         </select>
                     </label>
                     <label>
                         Categoría
                         <select
-                            name="categoria"
-                            value={vehiculoEditado.categoria}
+                            name="id_categoria"
+                            value={vehiculoEditado.id_categoria}
                             onChange={handleChange}
                             required
                         >
                             <option value="">Categoria</option>
-                            {opciones[0].opcionesCategoria?.map((categoria, index) =>
-                                <option value={categoria} key={index}>{categoria}</option>
+                            {categorias?.map((categoria, index) =>
+                                <option value={categoria.id_categoria} key={index}>{categoria.nombre}</option>
                             )}
                         </select>
                     </label>
@@ -125,29 +148,29 @@ function EditarPublicacion() {
                     <label>
                         Marca
                         <select
-                            name="marca"
-                            value={vehiculoEditado.marca}
-                            onChange={handleChangeMarca}
+                            name="id_marca"
+                            value={vehiculoEditado.id_marca}
+                            onChange={cambioDeMarca}
                             required
                         >
                             <option value="">Marca</option>
-                            {opciones[0].opcionMarcaYModelo?.map((marca, index) =>
-                                <option value={marca.nombre} key={index}>{marca.nombre}</option>
+                            {marcas?.map((marca, index) =>
+                                <option value={marca.id_marca} key={index}>{marca.nombre}</option>
                             )}
                         </select>
                     </label>
                     <label>
                         Modelo
                         <select
-                            name="modelo"
-                            value={vehiculoEditado.modelo}
-                            disabled={!vehiculoEditado.marca}
+                            name="id_modelo"
+                            value={vehiculoEditado.id_modelo}
+                            disabled={!vehiculoEditado.id_marca}
                             onChange={handleChange}
                             required
                         >
                             <option value="">Modelo</option>
-                            {getModeloPorMarca(vehiculoEditado.marca).map((modelo, index) =>
-                                <option value={modelo} key={index}>{modelo}</option>
+                            {modelos?.map((modelo, index) =>
+                                <option value={modelo.id_modelo} key={index}>{modelo.nombre}</option>
                             )}
                         </select>
                     </label>
@@ -157,7 +180,7 @@ function EditarPublicacion() {
                         Año
                         <select
                             type="number"
-                            name="año"
+                            name="year"
                             value={vehiculoEditado.año}
                             onChange={handleChange}
                             required
@@ -169,11 +192,11 @@ function EditarPublicacion() {
                         </select>
                     </label>
                     <label>
-                        Kilómetros
+                        Kilometraje
                         <input
-                            type="text"
-                            name="kilometros"
-                            value={vehiculoEditado.kilometros}
+                            type='number'
+                            name="kilometraje"
+                            value={vehiculoEditado.kilometraje}
                             onChange={handleChange}
                             required
                         />
@@ -183,21 +206,21 @@ function EditarPublicacion() {
                     <label>
                         Transmisión
                         <select
-                            name="transmision"
-                            value={vehiculoEditado.transmision}
+                            name="id_transmision"
+                            value={vehiculoEditado.id_transmision}
                             onChange={handleChange}
                             required
                         >
                             <option value="">Transmision</option>
-                            {opciones[0].opcionTransmision.map((transmision, index) =>
-                                <option value={transmision} key={index}>{transmision}</option>
+                            {transmisiones?.map((transmision, index) =>
+                                <option value={transmision.id_transmision} key={index}>{transmision.nombre}</option>
                             )}
                         </select>
                     </label>
                     <label>
                         Precio
                         <input
-                            type="text"
+                            type='number'
                             name="precio"
                             value={vehiculoEditado.precio}
                             onChange={handleChange}
@@ -220,15 +243,14 @@ function EditarPublicacion() {
                         type="file"
                         accept="image/*"
                         onChange={handleImageChange}
-                        required
                     />
                 </label>
                 {vehiculoEditado.imagen && <img src={vehiculoEditado.imagen} alt="Vehículo" className="imagen-vehiculo" />}
 
+                <div className="btn-editar">
+                    <button type="submit" className="boton-editar-aviso">Actualizar</button>
+                </div>
             </form>
-            <div className="btn-editar">
-                <button type="submit" className="boton-editar-aviso">Actualizar</button>
-            </div>
         </div>
 
     )

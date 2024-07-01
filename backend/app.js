@@ -74,16 +74,16 @@ app.get('/vehiculos/filtros', async (req, res) => {
     }
 })
 // data de una publicacion especifica
-app.get('/detalle/:id_publicacion', async (req,res) => {
-    const {id_publicacion} = req.params
+app.get('/detalle/:id_publicacion', async (req, res) => {
+    const { id_publicacion } = req.params
     const values = [id_publicacion]
     try {
         const consulta = `${queryVehiculos} WHERE id_publicacion = $1;`
-        const {rows, rowCount} = await pool.query(consulta, values)
+        const { rows, rowCount } = await pool.query(consulta, values)
         if (!rowCount) {
-            res.status(404).send({message: "No se encontró la publicación", code: 404})
+            res.status(404).send({ message: "No se encontró la publicación", code: 404 })
         }
-        res.status(200).send({code: 200, rows})
+        res.status(200).send({ code: 200, rows })
     } catch (error) {
         res.status(500).send("No se pudo conectar con el servidor")
     }
@@ -176,9 +176,13 @@ app.get("/publicar", autenticadorToken, (req, res) => {
     }
 })
 
-app.get("/editar-publicacion/:id_publicacion", autenticadorToken, (req, res) => {
-    const usuario = req.user
-    res.status(200).json({ message: 'Acceso concedido a ruta privada', usuario })
+app.get("/editar-publicacion", autenticadorToken, (req, res) => {
+    try {
+        const usuario = req.user
+        res.status(200).json({ message: 'Acceso concedido a ruta privada', code: 200, usuario })
+    } catch (error) {
+        res.status(500).send({ message: "Error al conectar con el servidor", code: 500, error })
+    }
 })
 
 app.get("/mis-publicaciones", autenticadorToken, async (req, res) => {
@@ -186,8 +190,8 @@ app.get("/mis-publicaciones", autenticadorToken, async (req, res) => {
         const usuario = req.user
         const id_usuario = usuario.id_usuario
         const dataMisPub = await getDataMisPub(id_usuario)
-        if (!dataMisPub.rowCount ) {
-            return res.status(204).send({ message: 'el usuario tiene acceso, pero no tiene publicaciones', code: 204, usuario})
+        if (!dataMisPub.rowCount) {
+            return res.status(204).send({ message: 'el usuario tiene acceso, pero no tiene publicaciones', code: 204, usuario })
         }
         if (dataMisPub.statusCode === 401) {
             res.status(401).send({ mesage: "usuario no tiene autorizacion", code: 401 })
@@ -274,11 +278,12 @@ app.put('/editar-publicacion/:id_publicacion', async (req, res) => {
     try {
         const { id_publicacion } = req.params
         const { titulo, precio, id_marca, id_modelo, year, kilometraje, id_transmision, id_categoria, id_estado, descripcion, imagen } = req.body
-        const { rows, rowCount } = await actualizarPub(id_publicacion, titulo, precio, id_marca, id_modelo, year, kilometraje, id_transmision, id_categoria, id_estado, descripcion, imagen)
-        if (!rowCount) {
-            return res.status(501).send("no se pudo conectar con el servidor")
+        const respuesta = await actualizarPub(id_publicacion, titulo, precio, id_marca, id_modelo, year, kilometraje, id_transmision, id_categoria, id_estado, descripcion, imagen)
+        if (!respuesta.rowCount) {
+            res.status(404).send({ message: "no se pudo conectar con el servidor", code: 404 })
+        } else {
+            res.status(200).send({ message: `La publicacion se actualizó exitosamente con sol datos:  ${respuesta.rows[0]}`, code: 200 })
         }
-        res.status(200).send("La publicacion se actualizó exitosamente con sol datos: ", rows[0])
     } catch (error) {
         res.status(500).send(error)
     }
