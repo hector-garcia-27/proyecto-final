@@ -181,7 +181,7 @@ function PublicarAviso() {
             <input className='input-publicar-aviso'
               type="text"
               name="kilometros"
-              value={vehiculo.kilometros}
+              value={vehiculo.kilometraje}
               onChange={handleChange}
               required
             />
