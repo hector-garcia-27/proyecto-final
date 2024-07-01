@@ -308,25 +308,24 @@ app.put('/editar-perfil/:id_usuario', async (req, res) => {
 // rutas DELETE
 
 // eliminar publicacion
-app.delete('/mis-publicaciones/:id_publicacion', async (req, res) => {
+app.delete('/mis-publicaciones', async (req, res) => {
     try {
-        const { id_publicacion } = req.params
-        const { id_usuario } = req.body
+        const { id_publicacion, id_usuario } = req.body
         const verificarPublicacion = await verificacionDePublicacion(id_publicacion)
         if (!verificarPublicacion.rowCount) {
-            return res.status(404).send("Publicación no encotrada")
+            return res.status(404).send({ message: "Publicación no encotrada", code: 404 })
         }
         const validacionDeUsuario = verificarPublicacion.rows[0]
         if (validacionDeUsuario.id_usuario !== id_usuario) {
-            res.status(401).send("No tienes autorización para borrar esta publicación")
+            return res.status(401).send({ message: "No tienes autorización para borrar esta publicación", code: 401 })
         }
         const deletePub = await borrarPublicacion(id_publicacion)
         if (!deletePub.rowCount) {
-            res.status(500).send("No se logró borrar la publicacion")
+            return res.status(501).send({ message: "No se pudo borrar la publicación", code: 501 })
         }
-        res.status(200).send("La publicación se borró con exito")
+        return res.status(200).send({ message: "La publicación se borró con exito", code: 200 })
     } catch (error) {
-        res.status(500).send({ message: "Problemas con el servidor", err: error })
+        res.status(500).send({ message: "Problemas con el servidor", error })
     }
 })
 

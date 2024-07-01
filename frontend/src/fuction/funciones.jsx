@@ -30,7 +30,7 @@ export async function validarRutaPublicar(token) {
     }
 }
 
-export async function validarRutaPrivada(token , url) {
+export async function validarRutaPrivada(token, url) {
     try {
         const res = await fetch(url, {
             method: 'GET',
@@ -43,5 +43,20 @@ export async function validarRutaPrivada(token , url) {
         return data
     } catch (error) {
         console.log(error)
+    }
+}
+
+export async function eliminarPublicacion(id_publicacion, id_usuario) {
+    try {
+        const res = await fetch('http://localhost:3000/mis-publicaciones', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_publicacion, id_usuario })
+        })
+        return res
+    } catch (error) {
+        console.log("Error en la peticion DELETE /mis-publicaciones", error)
     }
 }

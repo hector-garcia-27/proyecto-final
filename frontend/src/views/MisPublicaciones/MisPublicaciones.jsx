@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/Context'
 import { validarRutaPrivada } from '../../fuction/funciones';
+import { eliminarPublicacion } from '../../fuction/funciones'
 import './MisPublicaciones.css';
 
 function MisPublicaciones() {
@@ -32,6 +33,8 @@ function MisPublicaciones() {
         login()
         permisos()
     }, []);
+    console.log(usuarioActual)
+
     const handleVerDetalle = (idPublicacion) => {
         navigate(`/detalle/${idPublicacion}`, { state: { usuarioActual } });
     };
@@ -40,9 +43,18 @@ function MisPublicaciones() {
         navigate(`/editar-publicacion/${idPublicacion}`);
     };
 
-    const handleEliminar = (idPublicacion) => {
-        console.log(`Eliminar publicación ${idPublicacion}`);
-        setPublicaciones(publicaciones.filter(pub => pub.id_publicacion !== idPublicacion));
+    const handleEliminar = async (id_publicacion) => {
+        const eliminar = await eliminarPublicacion(id_publicacion, usuarioActual)
+        console.log(eliminar)
+
+        if (!eliminar.ok) {
+            return alert("La publicacion no se pudo eliminar")
+        }
+        if (eliminar.ok) {
+            alert("Publicacion eliminada")
+            window.location.reload();
+            return
+        }
     };
 
     if (sinPub === "") {
