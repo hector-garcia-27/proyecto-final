@@ -9,6 +9,7 @@ import { HiOutlineCalendarDays } from "react-icons/hi2";
 import { LiaTachometerAltSolid } from "react-icons/lia";
 import { IoLogoModelS } from "react-icons/io";
 import { LiaClipboardListSolid } from "react-icons/lia";
+import Swal from 'sweetalert2';
 
 function Detalle() {
     const { id_publicacion } = useParams();
@@ -35,8 +36,21 @@ function Detalle() {
         }
     };
 
-    const contactarVendedor = (vehiculoId) => {
-        alert(`Contactar al vendedor del vehículo con ID: ${vehiculoId}`);
+    const contactarVendedor = (vehiculo) => {
+        
+        Swal.fire({
+            title: '¿Deseas contactar al vendedor?',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Contactar',
+            confirmButtonColor: '#76ABAE',
+            denyButtonText: `No contactar`,
+            denyButtonColor: 'red',
+            cancelButtonText: 'Cancelar',
+            cancelButtonColor: 'gray',
+            text: `El vendedor de ${vehiculo}`,
+        })
+
     };
 
 
@@ -74,7 +88,7 @@ function Detalle() {
             </div>
 
             {!esPropietario && (
-                <button onClick={() => contactarVendedor(vehiculo.id_publicacion)}>Contactar al vendedor</button>
+                <button onClick={() => contactarVendedor(vehiculo.marca)}>Contactar al vendedor</button>
             )}
         </div>
     );

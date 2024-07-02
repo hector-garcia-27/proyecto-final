@@ -3,10 +3,10 @@ import { opciones } from "../../../public/opciones";
 import { AuthContext } from '../../context/Context'
 import { validarRutaPublicar } from '../../fuction/funciones'
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import './PublicarAviso.css';
 
 function PublicarAviso() {
-
   const navigate = useNavigate()
   const { getDataModelos, modelos, getDataTransmision, transmisiones, getDataEstado, estados, getDataMarca, marcas, getDataCategoria, categorias, logout, login } = useContext(AuthContext)
 
@@ -17,9 +17,14 @@ function PublicarAviso() {
       const data = await validarRutaPublicar(token)
       setVehiculo({ ...vehiculo, "id_usuario": data.usuario.id_usuario })
       if (data.code === 401) {
-        alert("Ud no está registrado")
-        navigate('/login')
-        logout()
+        Swal.fire({
+          icon: 'error',
+          title: 'No está registrado',
+          text: 'Por favor, inicie sesión para continuar.',
+        }).then(() => {
+          navigate('/login')
+          logout()
+        });
       }
     }
     permisos()
@@ -65,19 +70,45 @@ function PublicarAviso() {
       })
 
       if (res.status === 400) {
-        setError("Faltan datos en la solicitud")
-      }
-      if (res.status === 500) {
+        setError("Faltan datos en la solicitud");
+        Swal.fire({
+          icon: 'error',
+          iconColor: 'red',
+          title: 'Datos incompletos',
+          text: 'Por favor, complete todos los campos.',
+          confirmButtonText: 'Ok',
+          confirmButtonColor: '#76ABAE',
+          
+
+
+        });
+      } else if (res.status === 500) {
         setError("Error de conexión con el servidor")
-      }
-      if (res.status === 200) {
-        alert("la publicacion se realizó correctamente")
-        setError("")
-        navigate('/mis-publicaciones')
+        Swal.fire({
+          icon: 'error',
+          title: 'Error del servidor',
+          text: 'No se pudo conectar con el servidor. Inténtelo más tarde.',
+        });
+      } else if (res.status === 200) {
+        setError("");
+        Swal.fire({
+          icon: 'success',
+          title: 'Publicación exitosa',
+          text: "la publicacion se realizó correctamente."
+
+        }).then(() => {
+          navigate('/mis-publicaciones')
+        });
       }
     } catch (error) {
       console.log(error)
       setError("Error de conexión con el servidor")
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión',
+        text: 'No se pudo conectar con el servidor. Inténtelo más tarde.',
+        
+      });
     }
   }
 
@@ -86,8 +117,7 @@ function PublicarAviso() {
   };
 
   return (
-
-    <div className="container-publicar-aviso">
+  <div className="container-publicar-aviso">
       <h1 className='titulo-publicar-aviso'>Información de tu aviso</h1>
       <form onSubmit={handleSubmit} className="formulario-publicar">
         <label className="label-publicar-aviso">
@@ -99,9 +129,8 @@ function PublicarAviso() {
             onChange={handleChange}
             required
           />
-        </label >
+        </label>
         <div className="inline-fields">
-
           <label className="label-publicar-aviso">
             Estado
             <select type="text" name="id_estado" value={vehiculo.id_estado} onChange={handleChange} required >
@@ -110,8 +139,7 @@ function PublicarAviso() {
                 <option value={estado.id_estado} key={index}>{estado.nombre}</option>
               )}
             </select>
-          </label >
-
+          </label>
           <label className="label-publicar-aviso">
             Categoría
             <select className='input-publicar-aviso'
@@ -231,12 +259,13 @@ function PublicarAviso() {
         <div className='btn-publicar'>
           <button type="submit" className="boton-publicar-aviso">Publicar</button>
         </div>
-        <div>
-          {`${error}`}
-        </div>
-      </form >
-    </div >
-
+        {error && 
+          <div className={`alert alert-error`}>
+            {error}
+          </div>
+        }
+      </form>
+    </div>
   );
 }
 
