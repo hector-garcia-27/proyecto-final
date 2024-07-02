@@ -51,6 +51,27 @@ function Detalle() {
             text: `El vendedor de ${vehiculo}`,
         })
 
+        .then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Contactado',
+                    text: 'El vendedor ha sido contactado',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#76ABAE',
+                })
+            } else if (result.isDenied) {
+                Swal.fire({
+                    icon: 'info',
+                    iconColor: 'red',
+                    title: 'No contactado',
+                    text: 'El vendedor no ha sido contactado',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#76ABAE',
+                })
+            }
+        })
+
     };
 
 
