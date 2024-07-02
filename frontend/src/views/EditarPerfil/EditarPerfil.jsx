@@ -11,7 +11,6 @@ function EditarPerfil() {
   const regexParaEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
   const regexPas = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.-])[A-Za-z\d$@$!%*?&.-]{8,15}$/;
   const token = sessionStorage.getItem('token')
-
   const url = 'http://localhost:3000/editar-perfil'
 
   useEffect(() => {
@@ -33,19 +32,36 @@ function EditarPerfil() {
     }
   }
 
-
   const [error, setError] = useState('')
   const [succes, setSucces] = useState('')
-  const nullUser = {
-    nombre: '',
-    apellido: '',
-    telefono: '',
-    email: '',
-    imagen: null,
-    contraseña: '',
-    confirmarContraseña: ''
-  }
   const [nuevoUsuario, setNuevoUsuario] = useState({});
+
+  const id_usuario = nuevoUsuario.id_usuario
+
+  const editarPerfil = async () => {
+    try {
+      const res = await fetch(`http://localhost:3000/editar-perfil/${id_usuario}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nuevoUsuario)
+      })
+      const data = await res.json()
+      console.log(data)
+      if(data.code === 400 || data.code === 500){
+        return setError(data.message)
+      }
+      if(data.code === 200){
+        alert(`${nuevoUsuario.nombre}, tus datos han sido actalizados`)
+        navigate('/perfil')
+      }
+
+    } catch (error) {
+      console.log("error de respuesta del servidor",error)
+    }
+  }
+
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -69,21 +85,8 @@ function EditarPerfil() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     setSucces('');
 
-    if (nuevoUsuario.nombre === '') {
-      setError('Ingrese su nombre');
-      return;
-    }
-    if (nuevoUsuario.apellido === '') {
-      setError('Ingrese su apellido');
-      return;
-    }
-    if (nuevoUsuario.telefono === '') {
-      setError('Ingrese su numero');
-      return;
-    }
     if (nuevoUsuario.email === '') {
       setError('Ingrese su email');
       return;
@@ -92,11 +95,11 @@ function EditarPerfil() {
       setError('Ingrese un email válido');
       return;
     }
-    if (nuevoUsuario.contraseña === '') {
+    if (nuevoUsuario.password === '') {
       setError('Ingrese su contraseña');
       return;
     }
-    if (!regexPas.test(nuevoUsuario.contraseña)) {
+    if (!regexPas.test(nuevoUsuario.password)) {
       setError(
         'En contraseña, ingrese un mínimo de 8 caracteres y un máximo de 15, al menos una letra minúscula, al menos una letra mayúscula, al menos 1 dígito (número), al menos 1 caracter especial, que no existan espacios en blanco.'
       );
@@ -106,13 +109,13 @@ function EditarPerfil() {
       setError('Debe confirmar contaseña');
       return;
     }
-    
-    if (nuevoUsuario.contraseña !== nuevoUsuario.confirmarContraseña) {
+    if (nuevoUsuario.password !== nuevoUsuario.confirmarContraseña) {
       setError('Las contraseñas no coinciden');
       return;
     }
     setSucces('')
-    setError('');
+    setError('')
+    editarPerfil()
   };
 
   return (
@@ -181,7 +184,7 @@ function EditarPerfil() {
           <input
             className='input-editar'
             type='text'
-            name='contraseña'
+            name='password'
             value={nuevoUsuario.contraseña}
             onChange={handleChange}
           />
@@ -212,8 +215,7 @@ function EditarPerfil() {
         </div>
         <div className='boton-editar-perfil'>
           <button className='boton-guardar-editar' type='submit'>
-            {' '}
-            Registrarse{' '}
+            Actualizar
           </button>
         </div>
         <div className='mensajeEditar'>
