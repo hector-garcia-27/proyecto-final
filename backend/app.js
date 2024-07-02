@@ -195,12 +195,12 @@ app.get("/mis-publicaciones", autenticadorToken, async (req, res) => {
         const id_usuario = usuario.id_usuario
         const dataMisPub = await getDataMisPub(id_usuario)
         if (!dataMisPub.rowCount) {
-            return res.status(204).send({ message: 'el usuario tiene acceso, pero no tiene publicaciones', code: 204, usuario })
+            return res.status(204).send('el usuario tiene acceso, pero no tiene publicaciones')
         }
         if (dataMisPub.statusCode === 401) {
-            res.status(401).send({ mesage: "usuario no tiene autorizacion", code: 401 })
+            return res.status(401).send({ mesage: "usuario no tiene autorizacion", code: 401 })
         }
-        res.status(200).json({ message: 'Acceso concedido a ruta privada', code: 200, usuario, dataMisPub })
+        return res.status(200).json({ message: 'Acceso concedido a ruta privada', code: 200, usuario, dataMisPub })
     } catch (error) {
         res.status(500).send({ message: "no se pudo conectar con el servidor", code: 500, error })
     }
@@ -214,18 +214,18 @@ app.post('/registro', async (req, res) => {
     try {
         const { nombre, apellido, email, telefono, password, foto } = req.body
         if (!nombre || !apellido || !email || !password) {
-            return res.status(400).json("Faltan datos para poder realizar el registro")
+            return res.status(400).json({ message: "Faltan datos para poder realizar el registro", code: 400 })
         }
         const values = [nombre, apellido, email, telefono, bcrypt.hashSync(password), foto]
         const consulta = "INSERT INTO usuarios (nombre, apellido, email, telefono, password, foto) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;"
         const { rows, rowCount } = await pool.query(consulta, values)
         if (!rowCount) {
-            return res.status(500).send("No se ha podido registrar")
+            return res.status(500).send({ message: "No se ha podido registrar", code: 500 })
         }
-        res.status(201).json(rows[0])
+        res.status(201).json({ message: `${rows[0].nombre}, te has registrado con exito`, code: 201 })
     } catch (error) {
         console.log(error)
-        res.status(501).send("El usuario no se puede registrar " + error.detail)
+        res.status(501).send({ message: "Error de conexion con el servidor", code: 501 })
     }
 })
 
@@ -340,15 +340,16 @@ app.delete('/eliminar-perfil/:id_usuario', async (req, res) => {
         const { id_usuario } = req.params
         const verificarUsuario = await verificacionDeUsuario(id_usuario)
         if (!verificarUsuario.rowCount) {
-            return res.status(404).send("El usuario no existe")
+            return res.status(404).send({ message: "El usuario no existe", code: 404 })
         }
         const eliminarPerfil = await borrarCuenta(id_usuario)
         if (!eliminarPerfil.rowCount) {
-            return res.status(500).send("Error al eliminar el usuario")
+            return res.status(501).send({ message: "Error al eliminar el usuario", code: 501 })
         }
-        res.status(200).send({ message: "El usuario se ha eliminado junto con todas sus publicaciones", usuario: verificarUsuario.rows[0] })
+        res.status(200).send({ code: 200, message: `La cuenta de ${verificarUsuario.rows[0].nombre} se ha eliminado junto con todas sus publicaciones` })
     } catch (error) {
-        res.status(500).send({ message: "Problemas con el servidor", err: error })
+        console.log(error)
+        res.status(500).send({ message: "Problemas con el servidor, ver error desde la terminal", code: 500 })
     }
 })
 module.exports = app

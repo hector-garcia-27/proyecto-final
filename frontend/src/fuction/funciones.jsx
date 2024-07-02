@@ -27,8 +27,7 @@ export async function validarRutaPrivada(token, url) {
         const data = await res.json()
         return data
     } catch (error) {
-        console.log(error)
-        return {message: "error al validar ruta", code: 500}
+        return { message: "error al validar ruta", code: 500 }
     }
 }
 
@@ -44,5 +43,21 @@ export async function eliminarPublicacion(id_publicacion, id_usuario) {
         return res
     } catch (error) {
         console.log("Error en la peticion DELETE /mis-publicaciones", error)
+    }
+}
+
+export async function deleteAccount(id_usuario) {
+    try {
+        const res = await fetch(`http://localhost:3000/eliminar-perfil/${id_usuario}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_usuario })
+        })
+        const data = await res.json()
+        return data
+    } catch (error) {
+        console.log("Error en la peticion DELETE /eliminar-perfil", error)
     }
 }

@@ -3,12 +3,10 @@ import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect, useContext } from 'react';
 import './Perfil.css';
 import { useNavigate } from 'react-router-dom';
-import { validarRutaPrivada } from '../../fuction/funciones'
+import { validarRutaPrivada, deleteAccount } from '../../fuction/funciones'
 import { AuthContext } from '../../context/Context'
 
 function Perfil() {
-
-
 
   const { login, logout } = useContext(AuthContext)
   const token = sessionStorage.getItem('token')
@@ -38,9 +36,19 @@ function Perfil() {
   const handleEditar = () => {
     navigate('/editar-perfil');
   };
-  const handleEliminar = () => {
-    console.log('Eliminar cuenta');
-    alert('La cuenta ha sido eliminada exitosamente.');
+  const handleEliminar = async () => {
+    const id_usuario = usuario.id_usuario
+    const data = await deleteAccount(id_usuario)
+    console.log(data)
+    if (data.code === 404 || data.code === 501 || data.code === 500) {
+      return alert(data.message)
+    }
+    if (data.code === 200) {
+      alert(data.message)
+      logout()
+      navigate('/')
+      return
+    }
   };
 
   return (
