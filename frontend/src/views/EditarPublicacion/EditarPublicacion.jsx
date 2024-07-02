@@ -58,7 +58,7 @@ function EditarPublicacion() {
             })
             if (res.ok) {
                 alert("Publicación actualizada con exito")
-                navigate('/mis-publicaciones')
+                navigate(`/mis-publicaciones`)
                 return 
             }
             if (!res.ok) {
@@ -192,7 +192,7 @@ function EditarPublicacion() {
                         </select>
                     </label>
                     <label>
-                        Kilometraje
+                        Kilometros
                         <input
                             type='number'
                             name="kilometraje"

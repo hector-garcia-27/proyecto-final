@@ -3,23 +3,28 @@ import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect, useContext } from 'react';
 import './Perfil.css';
 import { useNavigate } from 'react-router-dom';
-import { validacionRutaPerfil } from '../../fuction/funciones'
+import { validarRutaPrivada } from '../../fuction/funciones'
 import { AuthContext } from '../../context/Context'
 
 function Perfil() {
 
+
+
   const { login, logout } = useContext(AuthContext)
   const token = sessionStorage.getItem('token')
+  const url = 'http://localhost:3000/perfil'
+
   useEffect(() => {
     const permisos = async () => {
-      const data = await validacionRutaPerfil(token)
-      if (data === "Usuario no tiene autorizacion") {
-        console.log("data es ", data)
+      const data = await validarRutaPrivada(token, url)
+      if (data.code === 401 || data.code === 500) {
         alert("usuario sin credenciales")
         logout()
         navigate('/login')
-      } else {
-        setUsuario(data[0])
+        return
+      }
+      if (data.code === 200) {
+        setUsuario(data.dataPerfil)
         login()
       }
     }
