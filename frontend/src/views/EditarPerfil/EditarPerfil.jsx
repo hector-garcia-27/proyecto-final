@@ -1,24 +1,51 @@
 import './EditarPerfil.css'
-import { useState } from 'react'
+import { useState, useContext, useEffect } from 'react'
+import { AuthContext } from '../../context/Context';
+import { validarRutaPrivada } from '../../fuction/funciones';
+import { useNavigate } from 'react-router-dom';
 
 function EditarPerfil() {
 
+  const { login, logout } = useContext(AuthContext)
+  const navigate = useNavigate()
   const regexParaEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
   const regexPas = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.-])[A-Za-z\d$@$!%*?&.-]{8,15}$/;
+  const token = sessionStorage.getItem('token')
+
+  const url = 'http://localhost:3000/editar-perfil'
+
+  useEffect(() => {
+    permisos()
+  }, [])
+
+  const permisos = async () => {
+    const data = await validarRutaPrivada(token, url)
+    setNuevoUsuario(data.usuario)
+
+    if (data.code === 401 || data.code === 500) {
+      alert("Usuario no tiene autorizacion")
+      logout()
+      navigate('/login')
+      return
+    }
+    if (data.code === 200) {
+      login()
+    }
+  }
+
 
   const [error, setError] = useState('')
   const [succes, setSucces] = useState('')
-
-  const [nuevoUsuario, setNuevoUsuario] = useState({
-    nombre: 'Juan',
-    apellido: 'Perez',
+  const nullUser = {
+    nombre: '',
+    apellido: '',
     telefono: '',
     email: '',
     imagen: null,
     contraseña: '',
     confirmarContraseña: ''
-  });
-
+  }
+  const [nuevoUsuario, setNuevoUsuario] = useState({});
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -71,19 +98,21 @@ function EditarPerfil() {
     }
     if (!regexPas.test(nuevoUsuario.contraseña)) {
       setError(
-        'Ingrese un mínimo de 8 caracteres y un máximo de 15, al menos una letra minúscula, al menos una letra mayúscula, al menos 1 dígito (número), al menos 1 caracter especial, que no existan espacios en blanco.'
+        'En contraseña, ingrese un mínimo de 8 caracteres y un máximo de 15, al menos una letra minúscula, al menos una letra mayúscula, al menos 1 dígito (número), al menos 1 caracter especial, que no existan espacios en blanco.'
       );
       return;
     }
+    if (!nuevoUsuario.confirmarContraseña) {
+      setError('Debe confirmar contaseña');
+      return;
+    }
+    
     if (nuevoUsuario.contraseña !== nuevoUsuario.confirmarContraseña) {
       setError('Las contraseñas no coinciden');
       return;
     }
-
+    setSucces('')
     setError('');
-    setSucces('Perfil editado exitosamente');
-
-    console.log('Datos del nuevo usuario:', nuevoUsuario);
   };
 
   return (
@@ -151,7 +180,7 @@ function EditarPerfil() {
           <label className='label-editar'> Contraseña</label>
           <input
             className='input-editar'
-            type='password'
+            type='text'
             name='contraseña'
             value={nuevoUsuario.contraseña}
             onChange={handleChange}
@@ -162,7 +191,7 @@ function EditarPerfil() {
           <label className='label-editar'>Confirmar contraseña</label>
           <input
             className='input-editar'
-            type='password'
+            type='text'
             name='confirmarContraseña'
             value={nuevoUsuario.confirmarContraseña}
             onChange={handleChange}

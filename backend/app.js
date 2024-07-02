@@ -155,7 +155,7 @@ app.get("/perfil", autenticadorToken, async (req, res) => {
         if (dataPerfil === "") {
             res.status(404).send("Usuario no tiene autorizacion")
         }
-        res.status(200).json([dataPerfil])
+        res.status(200).json({ message: "Usuario autorizado", code: 200, dataPerfil})
     } catch (error) {
         res.status(500).send("Usuario no tiene autorizacion")
     }
@@ -163,8 +163,12 @@ app.get("/perfil", autenticadorToken, async (req, res) => {
 })
 
 app.get("/editar-perfil", autenticadorToken, (req, res) => {
-    const usuario = req.user
-    res.status(200).json({ message: 'Acceso concedido a ruta privada', usuario })
+    try {
+        const usuario = req.user
+        res.status(200).json({ message: 'Acceso concedido a ruta privada', code: 200, usuario })
+    } catch (error) {
+        res.status(500).send({ message: "Error al conectar con el servidor", code: 500 })
+    }
 })
 
 app.get("/publicar", autenticadorToken, (req, res) => {

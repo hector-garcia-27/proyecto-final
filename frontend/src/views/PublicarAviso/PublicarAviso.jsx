@@ -73,6 +73,7 @@ function PublicarAviso() {
       if (res.status === 200) {
         alert("la publicacion se realizó correctamente")
         setError("")
+        navigate('/mis-publicaciones')
       }
     } catch (error) {
       console.log(error)
@@ -180,7 +181,7 @@ function PublicarAviso() {
             Kilómetros
             <input className='input-publicar-aviso'
               type="text"
-              name="kilometros"
+              name="kilometraje"
               value={vehiculo.kilometraje}
               onChange={handleChange}
               required

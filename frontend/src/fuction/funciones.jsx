@@ -1,18 +1,3 @@
-export async function validacionRutaPerfil(token) {
-    try {
-        const res = await fetch('http://localhost:3000/perfil', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'accept': 'application/json'
-            }
-        })
-        const data = await res.json()
-        return data
-    } catch (error) {
-        console.log("error")
-    }
-}
 
 export async function validarRutaPublicar(token) {
     try {
@@ -43,6 +28,7 @@ export async function validarRutaPrivada(token, url) {
         return data
     } catch (error) {
         console.log(error)
+        return {message: "error al validar ruta", code: 500}
     }
 }
 
