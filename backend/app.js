@@ -155,7 +155,7 @@ app.get("/perfil", autenticadorToken, async (req, res) => {
         if (dataPerfil === "") {
             res.status(404).send("Usuario no tiene autorizacion")
         }
-        res.status(200).json({ message: "Usuario autorizado", code: 200, dataPerfil})
+        res.status(200).json({ message: "Usuario autorizado", code: 200, dataPerfil })
     } catch (error) {
         res.status(500).send("Usuario no tiene autorizacion")
     }
@@ -245,7 +245,8 @@ app.post('/login', async (req, res) => {
                 nombre: usuarioVerificado.rows[0].nombre,
                 apellido: usuarioVerificado.rows[0].apellido,
                 email: usuarioVerificado.rows[0].email,
-                id_usuario: usuarioVerificado.rows[0].id_usuario
+                id_usuario: usuarioVerificado.rows[0].id_usuario,
+                telefono: usuarioVerificado.rows[0].telefono
             }, key)
             res.status(200).send({ token })
         }
@@ -296,16 +297,16 @@ app.put('/editar-publicacion/:id_publicacion', async (req, res) => {
 // editar perfil
 app.put('/editar-perfil/:id_usuario', async (req, res) => {
     try {
+        const nuevoUsuario = req.body
         const { id_usuario } = req.params
-        const { email, foto, telefono, password } = req.body
-        const perfilActualizado = await actualizarPerfil(email, foto, telefono, password, id_usuario)
+        const perfilActualizado = await actualizarPerfil(nuevoUsuario.email, nuevoUsuario.foto, nuevoUsuario.telefono, bcrypt.hashSync(nuevoUsuario.password), id_usuario)
         if (!perfilActualizado.rowCount) {
-            return res.status(400).send("No se pudo actualizar el perfil")
+            return res.status(400).send({ message: "No se pudo actualizar el perfil", code: 400 })
         }
-        res.status(200).send(`Los datos del usuario con id ${id_usuario} se han actualizado correctamente`)
+        res.status(200).send({ message: `Los datos del usuario con id ${id_usuario} se han actualizado correctamente`, code: 200 })
     } catch (error) {
         console.log(error)
-        res.status(500).send({ message: "Problemas con el servidor", err: error })
+        res.status(500).send({ message: "Problemas con el servidor", code: 500, error })
     }
 })
 
