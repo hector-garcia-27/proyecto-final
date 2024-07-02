@@ -55,29 +55,6 @@ function Registro() {
   };
 
   const registrarUsuario = async () => {
-    try {
-      const res = await fetch('http://localhost:3000/registro', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(nuevoUsuario)
-      });
-      if (res.status === 501) {
-        console.log('Error de la solicitud');
-        return alert("El usuario ya está registrado");
-      }
-      if (res.status === 201) {
-        const data = await res.json();
-        console.log("Respuesta del servidor: ", data);
-        navigate('/login');
-      }
-      setAprobado(true);
-    } catch (error) {
-      console.log(error);
-    }
-
-    setSucces('');
 
     if (nuevoUsuario.nombre === '') {
       setError('Ingrese su nombre');
@@ -114,6 +91,29 @@ function Registro() {
       return;
     }
 
+    try {
+      const res = await fetch('http://localhost:3000/registro', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nuevoUsuario)
+      });
+      const { code, message } = await res.json()
+      if (code === 501 || code === 500 || code === 400 ) {
+        console.log(message)
+        return alert(message);
+      }
+      if (code === 201) {
+        alert(message)
+        navigate('/login');
+      }
+      setAprobado(true);
+    } catch (error) {
+      console.log(error);
+    }
+
+    setSucces('');
     setError('');
 
     console.log('Datos del nuevo usuario:', nuevoUsuario);

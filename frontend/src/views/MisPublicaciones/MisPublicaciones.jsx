@@ -10,16 +10,16 @@ function MisPublicaciones() {
     const navigate = useNavigate();
     const [publicaciones, setPublicaciones] = useState([]);
     const { login, logout } = useContext(AuthContext)
-    const [sinPub, setSinPub] = useState("")
+    const [sinPub, setSinPub] = useState(false)
     // logica para validacion de ruta privada
     const token = sessionStorage.getItem('token')
     const url = 'http://localhost:3000/mis-publicaciones'
 
     const permisos = async () => {
         const data = await validarRutaPrivada(token, url)
-        if (!data) {
-            setSinPub("No ha realizado publicaciones")
-        } else if (data.code === 401) {
+        if (data.code === 500) {
+            setSinPub(true)
+        }else if (data.code === 401) {
             alert("Usuario no tiene autorización")
             navigate('/login')
             logout()
@@ -33,7 +33,6 @@ function MisPublicaciones() {
         login()
         permisos()
     }, []);
-    console.log(usuarioActual)
 
     const handleVerDetalle = (idPublicacion) => {
         navigate(`/detalle/${idPublicacion}`, { state: { usuarioActual } });
@@ -45,7 +44,6 @@ function MisPublicaciones() {
 
     const handleEliminar = async (id_publicacion) => {
         const eliminar = await eliminarPublicacion(id_publicacion, usuarioActual)
-        console.log(eliminar)
 
         if (!eliminar.ok) {
             return alert("La publicacion no se pudo eliminar")
@@ -56,8 +54,7 @@ function MisPublicaciones() {
             return
         }
     };
-
-    if (sinPub === "") {
+    if (!sinPub) {
         return (
             <div className="mis-publicaciones-container">
                 <h1 className="mis-publicaciones-title">Mis Publicaciones</h1>
@@ -81,7 +78,7 @@ function MisPublicaciones() {
             <div className="mis-publicaciones-container">
                 <h1 className="mis-publicaciones-title">Mis Publicaciones</h1>
                 <div className="publicaciones-grid">
-                    <div>{sinPub}</div>
+                    <div>El usuario no tiene publicaciones realizadas</div>
                 </div>
             </div>
         );
