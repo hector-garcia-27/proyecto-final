@@ -34,7 +34,7 @@ app.get('/vehiculos', async (req, res) => {
 })
 
 //data de email del dueño de la publicacion
-app.get('/detalle/:id_publicacion', async (req, res) => {
+app.get('/detalle/user/:id_publicacion', async (req, res) => {
     const { id_publicacion } = req.params
     try {
         const consulta = 'SELECT u.email AS email, u.nombre AS nombre, u.telefono AS telefono FROM usuarios u JOIN publicaciones p ON u.id_usuario = p.id_usuario WHERE id_publicacion = $1;'

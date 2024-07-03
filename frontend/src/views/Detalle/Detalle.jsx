@@ -27,7 +27,7 @@ function Detalle() {
 
     const getContacto = async () => {
         try {
-            const res = await fetch(`${endpoint}/detalle/${id_publicacion}`)
+            const res = await fetch(`${endpoint}/detalle/user/${id_publicacion}`)
             const data = await res.json()
             setContacto(data)
         } catch (error) {
@@ -96,7 +96,7 @@ function Detalle() {
 
 
     const esPropietario = vehiculo.id_usuario === usuarioActual;
-
+    console.log(vehiculo)
     return (
         <div className="detalleVehiculo">
             <h1>{vehiculo.titulo}</h1>
