@@ -1,7 +1,8 @@
 import './Registro.css'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { endpoint } from '../../assets/config';
+import Swal from 'sweetalert2';
 
 function Registro() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ function Registro() {
   const regexPas = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.-])[A-Za-z\d$@$!%*?&.-]{8,15}$/;
 
   const [error, setError] = useState("");
-  const [succes, setSucces] = useState("");
+  const [success, setSuccess] = useState("");
 
   const [nuevoUsuario, setNuevoUsuario] = useState({
     nombre: '',
@@ -50,12 +51,8 @@ function Registro() {
     setNuevoUsuario({ ...nuevoUsuario, foto: URL.createObjectURL(file) });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    registrarUsuario();
-  };
-
-  const registrarUsuario = async () => {
 
     if (nuevoUsuario.nombre === '') {
       setError('Ingrese su nombre');
@@ -102,21 +99,39 @@ function Registro() {
       });
       const { code, message } = await res.json()
       if (code === 501 || code === 500 || code === 400 ) {
-        console.log(message)
-        return alert(message);
+        setError(message);
+        Swal.fire({
+          icon: 'error',
+          iconColor: 'red',
+          title: 'Error en el registro',
+          text: message,
+          confirmButtonColor: '#76ABAE',
+        });
+      } else if (code === 201) {
+        setSuccess(message);
+        Swal.fire({
+          icon: 'success',
+          iconColor: 'green',
+          title: 'Registro exitoso',
+          text: message,
+          confirmButtonColor: '#76ABAE',
+        }).then(() => {
+          navigate('/login');
+        });
       }
-      if (code === 201) {
-        alert(message)
-        navigate('/login');
-      }
-      setAprobado(true);
     } catch (error) {
       console.log(error);
+      setError('Error en la conexión con el servidor');
+      Swal.fire({
+        icon: 'error',
+        iconColor: 'red',
+        title: 'Error de conexión',
+        text: 'No se pudo conectar con el servidor. Inténtelo más tarde.',
+        confirmButtonColor: '#76ABAE',
+      });
     }
 
-    setSucces('');
-    setError('');
-
+    setSuccess('');
     console.log('Datos del nuevo usuario:', nuevoUsuario);
   };
 
@@ -216,8 +231,8 @@ function Registro() {
           </button>
         </div>
         <div className='mensajeRegistro'>
-          {error.length > 0 && <div className="alerta alerta-error">{error}</div>}
-          {succes.length > 0 && <div className="alerta alerta-exito">{succes}</div>}
+          {error && <div className="alerta alerta-error">{error}</div>}
+          {success && <div className="alerta alerta-exito">{success}</div>}
         </div>
       </form>
     </div>
