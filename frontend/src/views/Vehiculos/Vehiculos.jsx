@@ -84,6 +84,7 @@ function Vehiculos() {
                     iconColor: '#76ABAE',
                     title: 'Sin resultados',
                     text: 'No existen datos para esos filtros',
+                    confirmButtonColor: '#76ABAE',
                 });
             }
 
