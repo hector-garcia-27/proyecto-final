@@ -27,9 +27,9 @@ function Detalle() {
             const res = await fetch(`${endpoint}/detalle/${id_publicacion}`);
             const data = await res.json();
             if (data.code === 404) {
-                alert ("Publicacion no encontrada")
+                alert("Publicacion no encontrada")
             }
-            if(data.code === 200){
+            if (data.code === 200) {
                 setVehiculo(data.rows[0]);
             }
         } catch (error) {
@@ -38,30 +38,30 @@ function Detalle() {
     };
 
     const contactarVendedor = (vehiculo) => {
-        
+
         Swal.fire({
             title: '¿Deseas contactar al vendedor?',
-            showDenyButton: true,
+            //showDenyButton: true,
             showCancelButton: true,
-            confirmButtonText: 'Contactar',
+            confirmButtonText: 'Enviar email',
             confirmButtonColor: '#76ABAE',
-            denyButtonText: `No contactar`,
-            denyButtonColor: 'red',
+            //denyButtonColor: 'red',
             cancelButtonText: 'Cancelar',
             cancelButtonColor: 'gray',
             text: `El vendedor de ${vehiculo}`,
         })
 
-        .then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Contactado',
-                    text: 'El vendedor ha sido contactado',
-                    confirmButtonText: 'Ok',
-                    confirmButtonColor: '#76ABAE',
-                })
-            } else if (result.isDenied) {
+            .then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        
+                        //icon: 'success',
+                        //title: 'Contactado',
+                        //text: 'El vendedor ha sido contactado',
+                        //confirmButtonText: 'Ok',
+                        //confirmButtonColor: '#76ABAE',
+                    })
+                } /* else if (result.isDenied) {
                 Swal.fire({
                     icon: 'info',
                     iconColor: 'red',
@@ -70,8 +70,8 @@ function Detalle() {
                     confirmButtonText: 'Ok',
                     confirmButtonColor: '#76ABAE',
                 })
-            }
-        })
+            } */
+            })
 
     };
 
@@ -82,13 +82,13 @@ function Detalle() {
         <div className="detalleVehiculo">
             <h1>{vehiculo.titulo}</h1>
             <div className="detalleVehiculo2">
-                
+
                 <div className="imagenVehiculo">
-                <img className='imagen-detalle' src={vehiculo.imagen} alt={vehiculo.titulo} />
+                    <img className='imagen-detalle' src={vehiculo.imagen} alt={vehiculo.titulo} />
                 </div>
 
                 <div>
-                    <h2> <MdOutlineAttachMoney className='iconoDetalle'/>  Precio: {vehiculo.precio}</h2>
+                    <h2> <MdOutlineAttachMoney className='iconoDetalle' />  Precio: {vehiculo.precio}</h2>
                     <hr />
                     <p><b> <MdOutlineWatchLater className='iconoDetalle' />  Estado:</b> {vehiculo.estado}</p>
                     <hr />
@@ -104,7 +104,7 @@ function Detalle() {
                     <hr />
                     <p><b> <GiGearStick className='iconoDetalle' /> Transmisión: </b>{vehiculo.transmision}</p>
                     <hr />
-                    
+
                     <p><b>Descripción:</b> {vehiculo.descripcion}</p>
                 </div>
             </div>
