@@ -68,12 +68,20 @@ function Vehiculos() {
 
             const rutaConFiltros = `${endpoint}/vehiculos/filtros?${fEstado}${fCategoria}${fModelo}${fMarca}${fTransmision}${fYear}`
             const res = await fetch(rutaConFiltros)
-            const dataFilt = await res.json()
-            if (!dataFilt) {
-                console.log("no existen datos para esos filtros")
+            console.log(res)
+            if(!res.ok){
+                return alert ("error al conectar con el servidor")
             }
-            console.log(dataFilt)
-            setDataCompletaVehiculos(dataFilt)
+            if (res.status ===204) {
+               return alert("no existen datos para esos filtros")
+            }
+            
+            if(res.ok){
+                const dataFilt = await res.json()
+                setDataCompletaVehiculos(dataFilt)
+
+            }
+
         }
         getDataFiltrada()
     }
