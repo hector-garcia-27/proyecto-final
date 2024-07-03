@@ -51,7 +51,7 @@
     background-color: #76ABAE;
     color: white;
     border: none;
-    border-radius: 30px;
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s;
 }

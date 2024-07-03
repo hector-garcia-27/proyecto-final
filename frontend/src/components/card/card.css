@@ -1,7 +1,7 @@
 .botonCard{
     background-color: #76ABAE;
     color:white;
-    border-radius: 30px;
+    border-radius: 10px;
     width: 100px;
     border: none;
     
@@ -31,7 +31,7 @@
     background-color: #76ABAE;
     color:white;
     height: 40px;
-    border-radius: 30px;
+    border-radius: 10px;
     width: 100px;
     border: none;
 }
