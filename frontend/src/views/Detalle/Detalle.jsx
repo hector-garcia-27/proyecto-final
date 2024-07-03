@@ -17,10 +17,24 @@ function Detalle() {
     const location = useLocation();
     const usuarioActual = location.state?.usuarioActual || null;
     const [vehiculo, setVehiculo] = useState({});
+    const [contacto, setContacto] = useState({})
 
     useEffect(() => {
         fetchDataVehiculo(id_publicacion);
+        getContacto()
     }, []);
+
+    const getContacto = async () => {
+        try {
+            const res = await fetch(`${endpoint}/detalle/${id_publicacion}`)
+            const data = await res.json()
+            setContacto(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    console.log(contacto)
+
 
     const fetchDataVehiculo = async (id_publicacion) => {
         try {
@@ -54,7 +68,7 @@ function Detalle() {
             .then((result) => {
                 if (result.isConfirmed) {
                     Swal.fire({
-                        
+
                         //icon: 'success',
                         //title: 'Contactado',
                         //text: 'El vendedor ha sido contactado',

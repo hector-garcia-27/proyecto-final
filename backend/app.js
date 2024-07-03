@@ -33,6 +33,23 @@ app.get('/vehiculos', async (req, res) => {
     }
 })
 
+//data de email del dueño de la publicacion
+app.get('/detalle/:id_publicacion', async (req, res) => {
+    const { id_publicacion } = req.params
+    try {
+        const consulta = 'SELECT u.email AS email, u.nombre AS nombre, u.telefono AS telefono FROM usuarios u JOIN publicaciones p ON u.id_usuario = p.id_usuario WHERE id_publicacion = $1;'
+        const values = [id_publicacion]
+        const { rowCount, rows } = await pool.query(consulta, values)
+        if (!rowCount) {
+            return res.status(404).send({ message: "no se encontró al usuario", code: 404 })
+        }
+        res.status(200).send(rows[0])
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: "Error al conectar", error })
+    }
+})
+
 // data con la aplicacion de filtros
 app.get('/vehiculos/filtros', async (req, res) => {
     try {
