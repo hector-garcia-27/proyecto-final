@@ -1,5 +1,3 @@
-/* require("dotenv").config() */
-/* const endpoint = process.env.ENDPOINT */
-
-const endpoint = 'https://proyecto-final-2b4y.onrender.com'
+//const endpoint = 'https://proyecto-final-2b4y.onrender.com'
+const endpoint = "http://localhost:3000"
 export { endpoint }
