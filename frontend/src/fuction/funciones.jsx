@@ -1,7 +1,9 @@
 
+import { endpoint } from '../assets/config';
+
 export async function validarRutaPublicar(token) {
     try {
-        const res = await fetch('http://localhost:3000/publicar', {
+        const res = await fetch(`${endpoint}/publicar`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -33,7 +35,7 @@ export async function validarRutaPrivada(token, url) {
 
 export async function eliminarPublicacion(id_publicacion, id_usuario) {
     try {
-        const res = await fetch('http://localhost:3000/mis-publicaciones', {
+        const res = await fetch(`${endpoint}/mis-publicaciones`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -48,7 +50,7 @@ export async function eliminarPublicacion(id_publicacion, id_usuario) {
 
 export async function deleteAccount(id_usuario) {
     try {
-        const res = await fetch(`http://localhost:3000/eliminar-perfil/${id_usuario}`, {
+        const res = await fetch(`${endpoint}/eliminar-perfil/${id_usuario}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

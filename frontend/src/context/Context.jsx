@@ -1,18 +1,18 @@
 import { createContext, useState } from 'react';
-
 export const AuthContext = createContext();
+import { endpoint } from '../assets/config';
 
 const AuthProvider = ({ children }) => {
     // autenticacion provisional del navbar
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+    
 
     // peticion para conseguir toda la data de vehiculos
     const [dataCompletaVehiculos, setDataCompletaVehiculos] = useState([])
     const getDataVehiculos = async () => {
         try {
-            const urlApi = 'http://localhost:3000/vehiculos'
+            const urlApi = `${endpoint}/vehiculos`
             const res = await fetch(urlApi)
             const dataApi = await res.json()
             setDataCompletaVehiculos(dataApi)
@@ -25,7 +25,7 @@ const AuthProvider = ({ children }) => {
     const [estados, setEstado] = useState([])
     const getDataEstado = async () => {
         try {
-            const res = await fetch('http://localhost:3000/estados')
+            const res = await fetch(`${endpoint}/estados`)
             const dataEstados = await res.json()
             setEstado(dataEstados)
         } catch (error) {
@@ -38,7 +38,7 @@ const AuthProvider = ({ children }) => {
     const [marcas, setMarcas] = useState([])
     const getDataMarca = async () => {
         try {
-            const res = await fetch('http://localhost:3000/marcas')
+            const res = await fetch(`${endpoint}/marcas`)
             const dataMarcas = await res.json()
             setMarcas(dataMarcas)
         } catch (error) {
@@ -50,7 +50,7 @@ const AuthProvider = ({ children }) => {
     const [categorias, setCategroria] = useState([])
     const getDataCategoria = async () => {
         try {
-            const res = await fetch('http://localhost:3000/categorias')
+            const res = await fetch(`${endpoint}/categorias`)
             const dataCategorias = await res.json()
             setCategroria(dataCategorias)
         } catch (error) {
@@ -62,7 +62,7 @@ const AuthProvider = ({ children }) => {
     const [transmisiones, setTransmisiones] = useState([])
     const getDataTransmision = async () => {
         try {
-            const res = await fetch('http://localhost:3000/transmisiones')
+            const res = await fetch(`${endpoint}/transmisiones`)
             const dataTransmisiones = await res.json()
             setTransmisiones(dataTransmisiones)
         } catch (error) {
@@ -74,7 +74,7 @@ const AuthProvider = ({ children }) => {
     const [modelos, setModelos] = useState([])
     const getDataModelos = async (marcaOpcion) => {
         const id = marcaOpcion
-        const url = `http://localhost:3000/modelos/${id}`
+        const url = `${endpoint}/modelos/${id}`
         console.log(url)
         try {
             const res = await fetch(url)

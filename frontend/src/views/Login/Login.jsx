@@ -2,6 +2,7 @@ import './Login.css'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../context/Context'
+import { endpoint } from '../../assets/config';
 
 function Login() {
 
@@ -50,7 +51,7 @@ function Login() {
 
     const peticionLoginPost = async () => {
         try {
-            const res = await fetch('http://localhost:3000/login', {
+            const res = await fetch(`${endpoint}/login`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',

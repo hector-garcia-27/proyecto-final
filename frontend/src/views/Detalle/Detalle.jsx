@@ -10,6 +10,7 @@ import { LiaTachometerAltSolid } from "react-icons/lia";
 import { IoLogoModelS } from "react-icons/io";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import Swal from 'sweetalert2';
+import { endpoint } from '../../assets/config';
 
 function Detalle() {
     const { id_publicacion } = useParams();
@@ -23,7 +24,7 @@ function Detalle() {
 
     const fetchDataVehiculo = async (id_publicacion) => {
         try {
-            const res = await fetch(`http://localhost:3000/detalle/${id_publicacion}`);
+            const res = await fetch(`${endpoint}/detalle/${id_publicacion}`);
             const data = await res.json();
             if (data.code === 404) {
                 alert ("Publicacion no encontrada")

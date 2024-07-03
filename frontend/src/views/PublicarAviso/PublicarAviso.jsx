@@ -5,6 +5,7 @@ import { validarRutaPublicar } from '../../fuction/funciones'
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import './PublicarAviso.css';
+import { endpoint } from '../../assets/config';
 
 function PublicarAviso() {
   const navigate = useNavigate()
@@ -61,7 +62,7 @@ function PublicarAviso() {
 
   const peticionPublicarPost = async () => {
     try {
-      const res = await fetch('http://localhost:3000/publicar', {
+      const res = await fetch(`${endpoint}/publicar`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',

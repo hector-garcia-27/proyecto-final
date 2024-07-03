@@ -5,12 +5,13 @@ import './Perfil.css';
 import { useNavigate } from 'react-router-dom';
 import { validarRutaPrivada, deleteAccount } from '../../fuction/funciones'
 import { AuthContext } from '../../context/Context'
+import { endpoint } from '../../assets/config';
 
 function Perfil() {
 
   const { login, logout } = useContext(AuthContext)
   const token = sessionStorage.getItem('token')
-  const url = 'http://localhost:3000/perfil'
+  const url = `${endpoint}/perfil`
 
   useEffect(() => {
     const permisos = async () => {
