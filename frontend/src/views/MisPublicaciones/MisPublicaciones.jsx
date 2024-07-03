@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/Context'
 import { validarRutaPrivada } from '../../fuction/funciones';
 import { eliminarPublicacion } from '../../fuction/funciones'
 import './MisPublicaciones.css';
+import { endpoint } from '../../assets/config';
 
 function MisPublicaciones() {
     const [usuarioActual, setUsuarioActual] = useState(null)
@@ -13,7 +14,7 @@ function MisPublicaciones() {
     const [sinPub, setSinPub] = useState(false)
     // logica para validacion de ruta privada
     const token = sessionStorage.getItem('token')
-    const url = 'http://localhost:3000/mis-publicaciones'
+    const url = `${endpoint}/mis-publicaciones`
 
     const permisos = async () => {
         const data = await validarRutaPrivada(token, url)

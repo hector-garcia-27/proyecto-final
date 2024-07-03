@@ -3,6 +3,7 @@ import { useState, useContext, useEffect } from 'react'
 import { AuthContext } from '../../context/Context';
 import { validarRutaPrivada } from '../../fuction/funciones';
 import { useNavigate } from 'react-router-dom';
+import { endpoint } from '../../assets/config';
 
 function EditarPerfil() {
 
@@ -11,7 +12,7 @@ function EditarPerfil() {
   const regexParaEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
   const regexPas = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.-])[A-Za-z\d$@$!%*?&.-]{8,15}$/;
   const token = sessionStorage.getItem('token')
-  const url = 'http://localhost:3000/editar-perfil'
+  const url = `${endpoint}/editar-perfil`
 
   useEffect(() => {
     permisos()
@@ -40,7 +41,7 @@ function EditarPerfil() {
 
   const editarPerfil = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/editar-perfil/${id_usuario}`, {
+      const res = await fetch(`${endpoint}/editar-perfil/${id_usuario}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

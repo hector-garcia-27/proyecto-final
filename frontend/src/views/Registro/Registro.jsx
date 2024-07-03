@@ -1,6 +1,7 @@
 import './Registro.css'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { endpoint } from '../../assets/config';
 
 function Registro() {
   const navigate = useNavigate();
@@ -92,7 +93,7 @@ function Registro() {
     }
 
     try {
-      const res = await fetch('http://localhost:3000/registro', {
+      const res = await fetch(`${endpoint}/registro`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

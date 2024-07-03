@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/Context'
 import { opciones } from "../../../public/opciones"; // de aca nos estamos trayendo las opciones que deberian estar en la base de datos, para poder mapear las opciones disponibles
 import { useParams, useNavigate } from 'react-router-dom';
 import { validarRutaPrivada } from '../../fuction/funciones';
+import { endpoint } from '../../assets/config';
 
 function EditarPublicacion() {
 
@@ -25,7 +26,7 @@ function EditarPublicacion() {
     }
     const [vehiculoEditado, setVehiculoEditado] = useState(vNull);
     const token = sessionStorage.getItem('token')
-    const url = 'http://localhost:3000/editar-publicacion'
+    const url = `${endpoint}/editar-publicacion`
 
     const permisos = async () => {
         const data = await validarRutaPrivada(token, url)
@@ -49,7 +50,7 @@ function EditarPublicacion() {
     //peticion PUT a la api
     const editarPublicacion = async () => {
         try {
-            const res = await fetch(`http://localhost:3000/editar-publicacion/${id_publicacion}`, {
+            const res = await fetch(`${endpoint}/editar-publicacion/${id_publicacion}`, {
                 method: 'PUT',
                 headers: {
                     'content-type': 'application/json',

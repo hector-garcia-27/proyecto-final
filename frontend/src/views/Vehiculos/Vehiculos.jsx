@@ -3,6 +3,7 @@ import Card from "../../components/card/Card";
 import './Vehiculos.css';
 import { AuthContext } from '../../context/Context'
 import { opciones } from "../../../public/opciones";
+import { endpoint } from '../../assets/config';
 
 function Vehiculos() {
 
@@ -65,7 +66,7 @@ function Vehiculos() {
                 fYear=`&year=${añoOpcion}`
             }
 
-            const rutaConFiltros = `http://localhost:3000/vehiculos/filtros?${fEstado}${fCategoria}${fModelo}${fMarca}${fTransmision}${fYear}`
+            const rutaConFiltros = `${endpoint}/vehiculos/filtros?${fEstado}${fCategoria}${fModelo}${fMarca}${fTransmision}${fYear}`
             const res = await fetch(rutaConFiltros)
             const dataFilt = await res.json()
             if (!dataFilt) {
