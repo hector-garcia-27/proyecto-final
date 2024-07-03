@@ -46,7 +46,7 @@ function Registro() {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    setNuevoUsuario({ ...nuevoUsuario, imagen: URL.createObjectURL(file) });
+    setNuevoUsuario({ ...nuevoUsuario, foto: URL.createObjectURL(file) });
   };
 
   const handleSubmit = (event) => {
@@ -204,7 +204,7 @@ function Registro() {
             accept="image/*"
             onChange={handleImageChange}
           />
-          {nuevoUsuario.imagen && <img src={nuevoUsuario.imagen} alt="Imagen de perfil" className="imagen-registro" />}
+          {nuevoUsuario.foto && <img src={nuevoUsuario.foto} alt="Imagen de perfil" className="imagen-registro" />}
         </div>
         <div className="boton-registro">
           <button
