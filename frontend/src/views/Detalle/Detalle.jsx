@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import './Detalle.css';
 import { GiGearStick } from "react-icons/gi";
 import { MdOutlineAttachMoney } from "react-icons/md";
@@ -14,6 +14,7 @@ import { endpoint } from '../../assets/config';
 
 function Detalle() {
     const { id_publicacion } = useParams();
+    const navigate = useNavigate();
     const location = useLocation();
     const usuarioActual = location.state?.usuarioActual || null;
     const [vehiculo, setVehiculo] = useState({});
@@ -41,52 +42,56 @@ function Detalle() {
             const res = await fetch(`${endpoint}/detalle/${id_publicacion}`);
             const data = await res.json();
             if (data.code === 404) {
-                alert("Publicacion no encontrada")
-            }
-            if (data.code === 200) {
+                Swal.fire({
+                    icon: 'error',
+                    iconColor: 'red',
+                    title: 'Error',
+                    text: 'Publicación no encontrada',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#76ABAE',
+                }).then(() => {
+                    navigate('/vehiculos');
+                })
+            } else if (data.code === 200) {
                 setVehiculo(data.rows[0]);
             }
         } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                iconColor: 'red',
+                title: 'Error',
+                text: 'Error al obtener los datos del vehículo',
+                confirmButtonText: 'Ok',
+                confirmButtonColor: '#76ABAE',
+            }).then(() => {
+                navigate('/vehiculos');
+            })
             console.error('Error fetching vehiculo:', error);
         }
     };
 
-    const contactarVendedor = (vehiculo) => {
-
+    const contactarVendedor = () => {
         Swal.fire({
             title: '¿Deseas contactar al vendedor?',
-            //showDenyButton: true,
             showCancelButton: true,
             confirmButtonText: 'Enviar email',
             confirmButtonColor: '#76ABAE',
-            //denyButtonColor: 'red',
             cancelButtonText: 'Cancelar',
             cancelButtonColor: 'gray',
-            text: `El vendedor de ${vehiculo}`,
-        })
-
-            .then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-
-                        //icon: 'success',
-                        //title: 'Contactado',
-                        //text: 'El vendedor ha sido contactado',
-                        //confirmButtonText: 'Ok',
-                        //confirmButtonColor: '#76ABAE',
-                    })
-                } /* else if (result.isDenied) {
+        }).then((result) => {
+            if (result.isConfirmed) {
                 Swal.fire({
-                    icon: 'info',
-                    iconColor: 'red',
-                    title: 'No contactado',
-                    text: 'El vendedor no ha sido contactado',
+                    html: `
+                        <p><b>Nombre:</b> ${contacto.nombre}</p>
+                        <p><b>Email:</b> ${contacto.email}</p>
+                        <p><b>Teléfono:</b> ${contacto.telefono}</p>`,
                     confirmButtonText: 'Ok',
                     confirmButtonColor: '#76ABAE',
+                }).then(() => {
+                    navigate(`/vehiculos`);
                 })
-            } */
-            })
-
+            }
+        })
     };
 
 

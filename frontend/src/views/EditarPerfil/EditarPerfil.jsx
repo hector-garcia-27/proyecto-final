@@ -3,6 +3,7 @@ import { useState, useContext, useEffect } from 'react'
 import { AuthContext } from '../../context/Context';
 import { validarRutaPrivada } from '../../fuction/funciones';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { endpoint } from '../../assets/config';
 
 function EditarPerfil() {
@@ -19,22 +20,45 @@ function EditarPerfil() {
   }, [])
 
   const permisos = async () => {
-    const data = await validarRutaPrivada(token, url)
-    setNuevoUsuario(data.usuario)
+    try {
+      const data = await validarRutaPrivada(token, url)
+      setNuevoUsuario(data.usuario)
 
-    if (data.code === 401 || data.code === 500) {
-      alert("Usuario no tiene autorizacion")
-      logout()
-      navigate('/login')
-      return
+      if (data.code === 401 || data.code === 500) {
+        Swal.fire({
+          icon: 'error',
+          iconColor: 'red',
+          title: 'Error de autorización',
+          text: 'Usuario no tiene autorización',
+          confirmButtonText: 'Ok',
+          confirmButtonColor: '#76ABAE',
+        }).then(() => {
+          logout()
+          navigate('/login')
+        });
+        return
+      }
+      if (data.code === 200) {
+        login()
+      }
+    } catch (error) {
+      console.log('Error al validar permisos:', error);
+      Swal.fire({
+        icon: 'error',
+        iconColor: 'red',
+        title: 'Error',
+        text: 'Error al validar permisos',
+        confirmButtonText: 'Ok',
+        confirmButtonColor: '#76ABAE',
+      }).then(() => {
+        logout()
+        navigate('/login')
+      });
     }
-    if (data.code === 200) {
-      login()
-    }
-  }
+  };
 
   const [error, setError] = useState('')
-  const [succes, setSucces] = useState('')
+  const [success, setSuccess] = useState('')
   const [nuevoUsuario, setNuevoUsuario] = useState({});
 
   const id_usuario = nuevoUsuario.id_usuario
@@ -51,15 +75,21 @@ function EditarPerfil() {
       const data = await res.json()
       console.log(data)
       if(data.code === 400 || data.code === 500){
-        return setError(data.message)
+        setError(data.message)
       }
       if(data.code === 200){
-        alert(`${nuevoUsuario.nombre}, tus datos han sido actalizados`)
-        navigate('/perfil')
+        Swal.fire({
+          icon: 'success',
+          confirmButtonText: 'Ok',
+          confirmButtonColor: '#76ABAE',
+          title: `${nuevoUsuario.nombre}, tus datos han sido actualizados`
+        }).then(() => {
+          navigate('/perfil')
+        });
       }
-
+      
     } catch (error) {
-      console.log("error de respuesta del servidor",error)
+      console.log("Error de respuesta del servidor",error)
     }
   }
 
@@ -86,7 +116,6 @@ function EditarPerfil() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setSucces('');
 
     if (nuevoUsuario.email === '') {
       setError('Ingrese su email');
@@ -102,19 +131,19 @@ function EditarPerfil() {
     }
     if (!regexPas.test(nuevoUsuario.password)) {
       setError(
-        'En contraseña, ingrese un mínimo de 8 caracteres y un máximo de 15, al menos una letra minúscula, al menos una letra mayúscula, al menos 1 dígito (número), al menos 1 caracter especial, que no existan espacios en blanco.'
+        'La contraseña debe tener entre 8 y 15 caracteres, al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.'
       );
       return;
     }
     if (!nuevoUsuario.confirmarContraseña) {
-      setError('Debe confirmar contaseña');
+      setError('Debe confirmar la contraseña');
       return;
     }
     if (nuevoUsuario.password !== nuevoUsuario.confirmarContraseña) {
       setError('Las contraseñas no coinciden');
       return;
     }
-    setSucces('')
+
     setError('')
     editarPerfil()
   };
@@ -184,7 +213,7 @@ function EditarPerfil() {
           <label className='label-editar'> Contraseña</label>
           <input
             className='input-editar'
-            type='text'
+            type='password'
             name='password'
             value={nuevoUsuario.contraseña}
             onChange={handleChange}
@@ -195,7 +224,7 @@ function EditarPerfil() {
           <label className='label-editar'>Confirmar contraseña</label>
           <input
             className='input-editar'
-            type='text'
+            type='password'
             name='confirmarContraseña'
             value={nuevoUsuario.confirmarContraseña}
             onChange={handleChange}
@@ -221,7 +250,7 @@ function EditarPerfil() {
         </div>
         <div className='mensajeEditar'>
           {error.length > 0 && <h3 className='alerta alerta-error'>{error}</h3>}
-          {succes.length > 0 && <h3 className='alerta alerta-exito'>{succes}</h3>}
+          {success.length > 0 && <h3 className='alerta alerta-exito'>{success}</h3>}
         </div>
       </form>
     </div>
