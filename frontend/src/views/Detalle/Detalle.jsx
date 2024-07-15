@@ -26,15 +26,13 @@ function Detalle() {
 
     const getContacto = async () => {
         try {
-            const res = await fetch(`${endpoint}/detalle/${id_publicacion}`)
+            const res = await fetch(`${endpoint}/detalle/user/${id_publicacion}`)
             const data = await res.json()
             setContacto(data)
         } catch (error) {
             console.log(error)
         }
     }
-    console.log(contacto)
-
 
     const fetchDataVehiculo = async (id_publicacion) => {
         try {
