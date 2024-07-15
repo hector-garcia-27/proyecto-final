@@ -4,6 +4,7 @@ import './Vehiculos.css';
 import { AuthContext } from '../../context/Context'
 import { opciones } from "../../../public/opciones";
 import { endpoint } from '../../assets/config';
+import Swal from 'sweetalert2';
 
 function Vehiculos() {
 
@@ -39,7 +40,7 @@ function Vehiculos() {
 
     // funcion para aplicar flitro
     const aplicarFiltro = () => {
-        // logica para hacer el llamado a la api y que traiga la data con los filtros aplicados
+         // logica para hacer el llamado a la api y que traiga la data con los filtros aplicados
         const getDataFiltrada = async () => {
             let fEstado = ``
             if (estadoOpcion) {
@@ -68,12 +69,31 @@ function Vehiculos() {
 
             const rutaConFiltros = `${endpoint}/vehiculos/filtros?${fEstado}${fCategoria}${fModelo}${fMarca}${fTransmision}${fYear}`
             const res = await fetch(rutaConFiltros)
-            const dataFilt = await res.json()
-            if (!dataFilt) {
-                console.log("no existen datos para esos filtros")
+            console.log(res)
+            if(!res.ok){
+                return Swal.fire({
+                    icon: 'error',  
+                    iconColor: 'red',
+                    title: 'Error',
+                    text: 'Error al conectar con el servidor',
+                });
             }
-            console.log(dataFilt)
-            setDataCompletaVehiculos(dataFilt)
+            if (res.status ===204) {
+                return Swal.fire({
+                    icon: 'info',
+                    iconColor: '#76ABAE',
+                    title: 'Sin resultados',
+                    text: 'No existen datos para esos filtros',
+                    confirmButtonColor: '#76ABAE',
+                });
+            }
+
+            if(res.ok){
+                const dataFilt = await res.json()
+                setDataCompletaVehiculos(dataFilt)
+
+            }
+
         }
         getDataFiltrada()
     }

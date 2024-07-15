@@ -5,6 +5,7 @@ import { validarRutaPrivada } from '../../fuction/funciones';
 import { eliminarPublicacion } from '../../fuction/funciones'
 import './MisPublicaciones.css';
 import { endpoint } from '../../assets/config';
+import Swal from 'sweetalert2'; // Importa SweetAlert2
 
 function MisPublicaciones() {
     const [usuarioActual, setUsuarioActual] = useState(null)
@@ -21,9 +22,16 @@ function MisPublicaciones() {
         if (data.code === 500) {
             setSinPub(true)
         }else if (data.code === 401) {
-            alert("Usuario no tiene autorización")
-            navigate('/login')
-            logout()
+            Swal.fire({
+                icon: 'error',
+                iconColor: 'red',
+                title: 'Error',
+                text: 'Usuario no tiene autorización',
+                confirmButtonColor: '#76ABAE',
+            }).then(() => {
+                navigate('/login')
+                logout()
+            });
         } else if (data.dataMisPub.rowCount) {
             setPublicaciones(data.dataMisPub.rows)
             setUsuarioActual(data.usuario.id_usuario)
@@ -47,12 +55,25 @@ function MisPublicaciones() {
         const eliminar = await eliminarPublicacion(id_publicacion, usuarioActual)
 
         if (!eliminar.ok) {
-            return alert("La publicacion no se pudo eliminar")
-        }
-        if (eliminar.ok) {
-            alert("Publicacion eliminada")
-            window.location.reload();
-            return
+            Swal.fire({
+                icon: 'error',
+                iconColor: 'red',
+                title: 'Error',
+                text: 'La publicación no se pudo eliminar',
+                confirmButtonColor: '#76ABAE',
+            });
+        } else {
+            Swal.fire({
+                icon: 'success',
+                iconColor: 'green',
+                title: 'Éxito',
+                text: 'Publicación eliminada',
+                confirmButtonColor: '#76ABAE',
+            }).then(() => {
+                // Actualiza la lista de publicaciones sin recargar la página
+                const updatedPublicaciones = publicaciones.filter(pub => pub.id_publicacion !== id_publicacion);
+                setPublicaciones(updatedPublicaciones);
+            });
         }
     };
     if (!sinPub) {

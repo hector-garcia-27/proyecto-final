@@ -3,10 +3,11 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../context/Context'
 import { endpoint } from '../../assets/config';
+import Swal from 'sweetalert2'; // Importa SweetAlert2
 
 function Login() {
 
-    //Expresión regular para validar que el campo de email contenga el formato adecuado
+     //Expresión regular para validar que el campo de email contenga el formato adecuado
     const regexParaEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 
     //Expresión regular para validar el campo de password solicita un mínimo de 8 caracteres y un máximo de 15 , al menos una letra minúscula, al menos una letra mayúscula, al menos 1 dígito (número), al menos 1 caracter especial, que no existan espacios en blanco y al menos 1 símbolo para más seguridad fuente https://es.stackoverflow.com/questions/4300/expresiones-regulares-para-contrase%C3%B1a-en-base-a-una-politica.
@@ -22,7 +23,7 @@ function Login() {
 
     const handleLogin = () => {
         login()
-        
+
     }
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -32,19 +33,43 @@ function Login() {
 
         // Se validan los input
         if (email === "") {
-            setError("Ingrese su email")
+            Swal.fire({
+                icon: 'warning',
+                iconColor: 'red',
+                title: 'Error',
+                text: 'Ingrese su email',
+                confirmButtonColor: '#76ABAE',
+            });
             return
         } if (!regexParaEmail.test(email)) {
-            setError("Email no cumple con un formato válido")
+            Swal.fire({
+                icon: 'warning',
+                iconColor: 'red',
+                title: 'Error',
+                text: 'Email no cumple con un formato válido',
+                confirmButtonColor: '#76ABAE',
+            });
             return
         } if (password === "") {
-            setError("Ingrese su password")
+            Swal.fire({
+                icon: 'warning',
+                iconColor: 'red',
+                title: 'Error',
+                text: 'Ingrese su password',
+                confirmButtonColor: '#76ABAE',
+            });
             return
         } if (!regexPas.test(password)) {
-            setError("Formato de contraseña no cumple con los requisitos")
+            Swal.fire({
+                icon: 'warning',
+                iconColor: 'red',
+                title: 'Error',
+                text: 'Formato de contraseña no cumple con los requisitos',
+                confirmButtonColor: '#76ABAE',
+            });
             return
         }
-        //Se elimina el mensaje de error
+         //Se elimina el mensaje de error
         setError("")
         peticionLoginPost()
     }
@@ -58,11 +83,24 @@ function Login() {
                 },
                 body: JSON.stringify({ email, password })
             })
+            
             if (res.status === 404) {
-                setError("El usuario no existe")
-            }
+                Swal.fire({
+                    icon: 'error',
+                    iconColor: 'red',
+                    title: 'Error',
+                    text: 'El usuario no existe',
+                    confirmButtonColor: '#76ABAE',
+                });
+            } 
             if (res.status === 401){
-                setError("La contraseña es incorrecta")
+                Swal.fire({
+                    icon: 'error',
+                    iconColor: 'red',
+                    title: 'Error',
+                    text: 'La contraseña es incorrecta',
+                    confirmButtonColor: '#76ABAE',
+                });
             }
             if (res.status === 200) {
                 const { token } = await res.json()
@@ -73,8 +111,13 @@ function Login() {
             }
 
         } catch (error) {
-            setError("No se pudo contactar con el servidor")
-            alert ("Error 500 al contactar con el servidor")// falta el error
+            Swal.fire({
+                icon: 'error',
+                iconColor: 'red',
+                title: 'Error',
+                text: 'No se pudo contactar con el servidor',
+                confirmButtonColor: '#76ABAE',
+            });
             console.log(error)
         }
 

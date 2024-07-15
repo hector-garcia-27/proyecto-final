@@ -22,6 +22,7 @@ function PublicarAviso() {
           icon: 'error',
           title: 'No está registrado',
           text: 'Por favor, inicie sesión para continuar.',
+          confirmButtonColor: '#76ABAE',
         }).then(() => {
           navigate('/login')
           logout()
@@ -77,26 +78,25 @@ function PublicarAviso() {
           iconColor: 'red',
           title: 'Datos incompletos',
           text: 'Por favor, complete todos los campos.',
-          confirmButtonText: 'Ok',
           confirmButtonColor: '#76ABAE',
-          
-
-
         });
       } else if (res.status === 500) {
         setError("Error de conexión con el servidor")
         Swal.fire({
           icon: 'error',
+          iconColor: 'red',
           title: 'Error del servidor',
           text: 'No se pudo conectar con el servidor. Inténtelo más tarde.',
+          confirmButtonColor: '#76ABAE',
         });
       } else if (res.status === 200) {
         setError("");
         Swal.fire({
           icon: 'success',
+          iconColor: 'green',
           title: 'Publicación exitosa',
-          text: "la publicacion se realizó correctamente."
-
+          text: 'La publicación se realizó correctamente.',
+          confirmButtonColor: '#76ABAE',
         }).then(() => {
           navigate('/mis-publicaciones')
         });
@@ -108,7 +108,7 @@ function PublicarAviso() {
         icon: 'error',
         title: 'Error de conexión',
         text: 'No se pudo conectar con el servidor. Inténtelo más tarde.',
-        
+        confirmButtonColor: '#76ABAE',
       });
     }
   }
@@ -118,7 +118,7 @@ function PublicarAviso() {
   };
 
   return (
-  <div className="container-publicar-aviso">
+    <div className="container-publicar-aviso">
       <h1 className='titulo-publicar-aviso'>Información de tu aviso</h1>
       <form onSubmit={handleSubmit} className="formulario-publicar">
         <label className="label-publicar-aviso">

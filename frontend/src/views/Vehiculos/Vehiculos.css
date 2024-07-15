@@ -21,7 +21,7 @@
     background-color: #76ABAE;
     color:white;
     height: 40px;
-    border-radius: 30px;
+    border-radius: 10px;
     width: 100px;
     border: none;
 
@@ -58,7 +58,7 @@
 }
 
 .selectFiltros {
-    border-radius: 30px;
+    border-radius: 10px;
     height: 40px;
     background-color: #f4f4f4; 
     border: 1px solid #ccc; 
@@ -71,7 +71,7 @@
     background-color: #76ABAE;
     color:white;
     height: 40px;
-    border-radius: 30px;
+    border-radius: 10px;
     width: 60%;   
     border: none;
 

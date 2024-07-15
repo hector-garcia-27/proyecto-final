@@ -44,7 +44,7 @@ input {
     color: #EEEEEE;
     border: none;
     width: 150px;
-    border-radius: 30px;
+    border-radius: 10px;
 }
 
 button:hover {

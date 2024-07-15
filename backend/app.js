@@ -81,11 +81,12 @@ app.get('/vehiculos/filtros', async (req, res) => {
         }
         const unionDeFiltros = filtros.length > 0 ? 'WHERE ' + filtros.join(" AND ") : '';
         const consulta = `SELECT p.id_publicacion AS id_publicacion, p.id_usuario AS id_usuario, p.titulo AS titulo, p.precio AS precio, m.nombre AS marca, mo.nombre AS modelo, p.year AS año, p.kilometraje AS kilometraje, t.nombre AS transmision, c.nombre AS categoria, e.nombre AS estado, p.descripcion AS descripcion, p.imagen AS imagen FROM publicaciones p JOIN marcas m ON p.id_marca = m.id_marca JOIN modelos mo ON p.id_modelo = mo.id_modelo JOIN transmisiones t ON p.id_transmision = t.id_transmision JOIN categorias c ON p.id_categoria = c.id_categoria JOIN estados e ON p.id_estado = e.id_estado ${unionDeFiltros};`;
-        const { rows, rowCount } = await pool.query(consulta, values)
+        const  {rowCount, rows} = await pool.query(consulta, values)
+        console.log(rowCount)
         if (!rowCount) {
-            return res.status(204).send("No hay Autos publicados con estos filtros")
+            return res.status(204).send({message: "No hay Autos publicados con estos filtros",code:204})
         }
-        res.status(200).send(rows)
+        res.status(200).send(rows) 
     } catch (error) {
         res.status(500).send("No se pudo conectar con el servidor")
     }

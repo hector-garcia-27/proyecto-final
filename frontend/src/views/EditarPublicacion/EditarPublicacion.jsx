@@ -5,6 +5,7 @@ import { opciones } from "../../../public/opciones"; // de aca nos estamos traye
 import { useParams, useNavigate } from 'react-router-dom';
 import { validarRutaPrivada } from '../../fuction/funciones';
 import { endpoint } from '../../assets/config';
+import Swal from 'sweetalert2';
 
 function EditarPublicacion() {
 
@@ -31,14 +32,23 @@ function EditarPublicacion() {
     const permisos = async () => {
         const data = await validarRutaPrivada(token, url)
         if (data.code === 401) {
-            alert('Usuario sin autorización')
-            navigate('/login')
-            logout()
+            Swal.fire({
+                icon: 'error',
+                iconColor: 'red',
+                title: 'Usuario sin autorización',
+                confirmButtonText: 'Ok',
+                confirmButtonColor: '#76ABAE',
+
+            }).then(() => {
+                navigate('/login')
+                logout()
+            });
         } else {
             login()
             console.log(`usuario ${data.usuario.nombre} autorizado`)
         }
     }
+
     useEffect(() => {
         permisos()
         getDataTransmision()
@@ -58,17 +68,35 @@ function EditarPublicacion() {
                 body: JSON.stringify(vehiculoEditado)
             })
             if (res.ok) {
-                alert("Publicación actualizada con exito")
-                navigate(`/mis-publicaciones`)
-                return 
-            }
-            if (!res.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    iconColor: 'green',
+                    title: 'Publicación actualizada con éxito',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#76ABAE',
+                }).then(() => {
+                    navigate(`/mis-publicaciones`)
+                });
+            } else {
                 setVehiculoEditado(vNull)
-                return alert ("No se pudo actualizar la Publicacion")
+                Swal.fire({
+                    icon: 'error',
+                    iconColor: 'red',
+                    title: 'No se pudo actualizar la Publicación',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#76ABAE',
+                });
             }
 
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            Swal.fire({
+                icon: 'error',
+                iconColor: 'red',
+                title: 'Error al intentar actualizar la Publicación',
+                confirmButtonText: 'Ok',
+                confirmButtonColor: '#76ABAE',
+            });
         }
     }
 
@@ -91,8 +119,8 @@ function EditarPublicacion() {
     const handleSubmit = (event) => {
         event.preventDefault();
         editarPublicacion()
-        
-        
+
+
     };
 
     const getModeloPorMarca = (id_marca) => {
