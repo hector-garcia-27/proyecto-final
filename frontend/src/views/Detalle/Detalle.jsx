@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import './Detalle.css';
 import { GiGearStick } from "react-icons/gi";
@@ -11,8 +11,11 @@ import { IoLogoModelS } from "react-icons/io";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import Swal from 'sweetalert2';
 import { endpoint } from '../../assets/config';
+import { AuthContext } from '../../context/Context';
 
 function Detalle() {
+
+    const { isAuthenticated } = useContext(AuthContext)
     const { id_publicacion } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
@@ -80,9 +83,9 @@ function Detalle() {
             if (result.isConfirmed) {
                 Swal.fire({
                     html: `
-                        <p><b>Nombre:</b> ${contacto.nombre}</p>
-                        <p><b>Email:</b> ${contacto.email}</p>
-                        <p><b>Teléfono:</b> ${contacto.telefono}</p>`,
+                         <p><b>Nombre:</b> ${contacto.nombre}</p>
+                         <p><b>Email:</b> ${contacto.email}</p>
+                         <p><b>Teléfono:</b> ${contacto.telefono}</p>`,
                     confirmButtonText: 'Ok',
                     confirmButtonColor: '#76ABAE',
                 }).then(() => {
@@ -127,7 +130,27 @@ function Detalle() {
             </div>
 
             {!esPropietario && (
-                <button onClick={() => contactarVendedor(vehiculo.marca)}>Contactar al vendedor</button>
+                <button onClick={() => {
+                    if (isAuthenticated) {
+                        contactarVendedor()
+                    } else {
+                        Swal.fire({
+                            title: "¿Aún no tienes cuenta?",
+                            showDenyButton: true,
+                            showCancelButton: true,
+                            confirmButtonText: "inicia sesión",
+                            confirmButtonColor: '#76ABAE',
+                            denyButtonText: `registrate`,
+                            denyButtonColor: '#76ABAE',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                navigate('/login')
+                            } else if (result.isDenied) {
+                                navigate('/registro')
+                            }
+                        });
+                    }
+                }}>Contactar al vendedor</button>
             )}
         </div>
     );
