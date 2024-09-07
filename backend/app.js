@@ -198,6 +198,15 @@ app.get("/publicar", autenticadorToken, (req, res) => {
     }
 })
 
+app.get("/compartida", autenticadorToken, (req, res) => {
+    const usuario = req.user
+    try {
+        res.status(200).json({ message: 'Acceso concedido a ruta privada', code: 200, usuario })
+    } catch (error) {
+        res.status(401).send({ message: 'Acceso denegado a ruta privada', code: 401 })
+    }
+})
+
 app.get("/editar-publicacion", autenticadorToken, (req, res) => {
     try {
         const usuario = req.user

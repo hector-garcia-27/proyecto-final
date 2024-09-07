@@ -12,18 +12,31 @@ import { LiaClipboardListSolid } from "react-icons/lia";
 import Swal from 'sweetalert2';
 import { endpoint } from '../../assets/config';
 import { AuthContext } from '../../context/Context';
+import { validarRutaPrivada } from '../../fuction/funciones';
 
 function Detalle() {
 
-    const { isAuthenticated } = useContext(AuthContext)
+    const { isAuthenticated, login, logout } = useContext(AuthContext)
     const { id_publicacion } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
     const usuarioActual = location.state?.usuarioActual || null;
     const [vehiculo, setVehiculo] = useState({});
     const [contacto, setContacto] = useState({})
+    const token = sessionStorage.getItem('token')
+    const url = `${endpoint}/compartida`
 
     useEffect(() => {
+        const permisos = async () => {
+            const data = await validarRutaPrivada(token, url)
+            if (data.code === 401 || data.code === 500) {
+                logout()
+            }
+            if (data.code === 200) {
+                login()
+            }
+        }
+        permisos()
         fetchDataVehiculo(id_publicacion);
         getContacto(id_publicacion)
     }, []);

@@ -5,11 +5,25 @@ import { AuthContext } from '../../context/Context'
 import { opciones } from "../../../public/opciones";
 import { endpoint } from '../../assets/config';
 import Swal from 'sweetalert2';
+import { validarRutaPrivada } from "../../fuction/funciones";
 
 function Vehiculos() {
 
-    const {getDataModelos, modelos, getDataTransmision, transmisiones, getDataEstado, estados, getDataVehiculos, setDataCompletaVehiculos, dataCompletaVehiculos, getDataMarca, marcas, getDataCategoria, categorias } = useContext(AuthContext)
+    const token = sessionStorage.getItem('token')
+    const url = `${endpoint}/compartida`
+
+    const { login, logout, getDataModelos, modelos, getDataTransmision, transmisiones, getDataEstado, estados, getDataVehiculos, setDataCompletaVehiculos, dataCompletaVehiculos, getDataMarca, marcas, getDataCategoria, categorias } = useContext(AuthContext)
     useEffect(() => {
+        const permisos = async () => {
+            const data = await validarRutaPrivada(token, url)
+            if (data.code === 401 || data.code === 500) {
+                logout()
+            }
+            if (data.code === 200) {
+                login()
+            }
+        }
+        permisos()
         getDataVehiculos()
         getDataEstado()
         getDataMarca()
@@ -40,7 +54,7 @@ function Vehiculos() {
 
     // funcion para aplicar flitro
     const aplicarFiltro = () => {
-         // logica para hacer el llamado a la api y que traiga la data con los filtros aplicados
+        // logica para hacer el llamado a la api y que traiga la data con los filtros aplicados
         const getDataFiltrada = async () => {
             let fEstado = ``
             if (estadoOpcion) {
@@ -51,34 +65,34 @@ function Vehiculos() {
                 fCategoria = `&categoria=${categoriaOpcion}`
             }
             let fModelo = ``
-            if(modeloOpcion) {
+            if (modeloOpcion) {
                 fModelo = `&modelo=${modeloOpcion}`
             }
             let fMarca = ``
-            if(marcaOpcion){
+            if (marcaOpcion) {
                 fMarca = `&marca=${marcaOpcion}`
             }
             let fTransmision = ``
-            if(transmisionOpcion){
-                fTransmision=`&transmision=${transmisionOpcion}`
+            if (transmisionOpcion) {
+                fTransmision = `&transmision=${transmisionOpcion}`
             }
             let fYear = ``
-            if(añoOpcion) {
-                fYear=`&year=${añoOpcion}`
+            if (añoOpcion) {
+                fYear = `&year=${añoOpcion}`
             }
 
             const rutaConFiltros = `${endpoint}/vehiculos/filtros?${fEstado}${fCategoria}${fModelo}${fMarca}${fTransmision}${fYear}`
             const res = await fetch(rutaConFiltros)
             console.log(res)
-            if(!res.ok){
+            if (!res.ok) {
                 return Swal.fire({
-                    icon: 'error',  
+                    icon: 'error',
                     iconColor: 'red',
                     title: 'Error',
                     text: 'Error al conectar con el servidor',
                 });
             }
-            if (res.status ===204) {
+            if (res.status === 204) {
                 return Swal.fire({
                     icon: 'info',
                     iconColor: '#76ABAE',
@@ -88,7 +102,7 @@ function Vehiculos() {
                 });
             }
 
-            if(res.ok){
+            if (res.ok) {
                 const dataFilt = await res.json()
                 setDataCompletaVehiculos(dataFilt)
 
