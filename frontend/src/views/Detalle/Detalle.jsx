@@ -22,14 +22,14 @@ function Detalle() {
 
     useEffect(() => {
         fetchDataVehiculo(id_publicacion);
-        getContacto()
+        getContacto(id_publicacion)
     }, []);
 
-    const getContacto = async () => {
+    const getContacto = async (id_publicacion) => {
         try {
             const res = await fetch(`${endpoint}/detalle/user/${id_publicacion}`)
             const data = await res.json()
-            setContacto(data)
+            setContacto(data.rows)
         } catch (error) {
             console.log(error)
         }
@@ -72,7 +72,7 @@ function Detalle() {
         Swal.fire({
             title: '¿Deseas contactar al vendedor?',
             showCancelButton: true,
-            confirmButtonText: 'Enviar email',
+            confirmButtonText: 'Mostrar datos del vendedor',
             confirmButtonColor: '#76ABAE',
             cancelButtonText: 'Cancelar',
             cancelButtonColor: 'gray',

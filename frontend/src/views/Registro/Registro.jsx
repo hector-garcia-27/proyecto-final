@@ -84,6 +84,10 @@ function Registro() {
       );
       return;
     }
+    if (!nuevoUsuario.confirmarpassword) {
+      setError('Debe confirmar la contraseña');
+      return;
+    }
     if (nuevoUsuario.password !== nuevoUsuario.confirmarpassword) {
       setError('Las contraseñas no coinciden');
       return;
