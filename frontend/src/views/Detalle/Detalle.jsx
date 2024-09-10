@@ -27,16 +27,21 @@ function Detalle() {
     const url = `${endpoint}/compartida`
 
     useEffect(() => {
-        const permisos = async () => {
-            const data = await validarRutaPrivada(token, url)
-            if (data.code === 401 || data.code === 500) {
-                logout()
+        const permisos = async (token, url) => {
+            try {
+                const res = await validarRutaPrivada(token, url)
+                if (res.code === 401 || res.code === 500) {
+                    logout()
+                }
+                if (res.code === 200) {
+                    login()
+                }
+            } catch (error) {
+                console.log(error)
             }
-            if (data.code === 200) {
-                login()
-            }
+
         }
-        permisos()
+        permisos(token, url)
         fetchDataVehiculo(id_publicacion);
         getContacto(id_publicacion)
     }, []);
@@ -110,7 +115,7 @@ function Detalle() {
 
 
     const esPropietario = vehiculo.id_usuario === usuarioActual;
-    console.log(vehiculo)
+
     return (
         <div className="detalleVehiculo">
             <h1>{vehiculo.titulo}</h1>

@@ -15,11 +15,11 @@ function Vehiculos() {
     const { login, logout, getDataModelos, modelos, getDataTransmision, transmisiones, getDataEstado, estados, getDataVehiculos, setDataCompletaVehiculos, dataCompletaVehiculos, getDataMarca, marcas, getDataCategoria, categorias } = useContext(AuthContext)
     useEffect(() => {
         const permisos = async () => {
-            const data = await validarRutaPrivada(token, url)
-            if (data.code === 401 || data.code === 500) {
+            const res = await validarRutaPrivada(token, url)
+            if (res.code === 401 || res.code === 500) {
                 logout()
             }
-            if (data.code === 200) {
+            if (res.code === 200) {
                 login()
             }
         }
