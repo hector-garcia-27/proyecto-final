@@ -29,9 +29,12 @@
     overflow: hidden;
     padding: 20px;
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.publicacion-card img {
+.publicacion-separador img {
     width: 100%;
     height: auto;
     border-top-left-radius: 20px;

@@ -4,26 +4,24 @@
     border-radius: 10px;
     width: 100px;
     border: none;
-    
-    
 }
 
 .card{
-    width: 250px;
-    display: inline-block;
+    width: 300px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     overflow: hidden;
-    
-
-
 }
 
 .card:hover .card-img-top{
-    transform: scale(1.2);
+    transform: scale(1.05);
 }
 
-
 .card-img-top{
-    height: 200px;
+    width: 100%;
+    display: block;
     transition: transform 0.3s ease;
 }
 
@@ -47,6 +45,7 @@
     display: flex;
     flex-direction: column;
     align-items: start;
+    text-align: justify;
     padding: 20px;
     
 }

@@ -21,7 +21,7 @@ function MisPublicaciones() {
         const data = await validarRutaPrivada(token, url)
         if (data.code === 500) {
             setSinPub(true)
-        }else if (data.code === 401) {
+        } else if (data.code === 401) {
             Swal.fire({
                 icon: 'error',
                 iconColor: 'red',
@@ -83,8 +83,10 @@ function MisPublicaciones() {
                 <div className="publicaciones-grid">
                     {publicaciones?.map((publicacion) => (
                         <div key={publicacion.id_publicacion} className="publicacion-card">
-                            <img src={publicacion.imagen} alt={publicacion.titulo} />
-                            <h2 className="publicacion-title">{publicacion.titulo}</h2>
+                            <div className='publicacion-separador'>
+                                <img src={publicacion.imagen} alt={publicacion.titulo} />
+                                <h2 className="publicacion-title">{publicacion.titulo}</h2>
+                            </div>
                             <div className="botones-container">
                                 <button className='boton-MisPublicaciones' onClick={() => handleVerDetalle(publicacion.id_publicacion)}>Detalle</button>
                                 <button className='boton-MisPublicaciones' onClick={() => handleEditar(publicacion.id_publicacion)}>Editar</button>

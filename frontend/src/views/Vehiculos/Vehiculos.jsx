@@ -202,10 +202,10 @@ function Vehiculos() {
 
             <h1>AUTOS PUBLICADOS</h1>
 
-            <div className="galeriaVehiculos">
+            <div className="galeriaVehiculos" >
 
                 {dataCompletaVehiculos?.map(element => (
-                    <div key={element.id_publicacion} /* to={`/detalle/${element.id_publicacion}`} */>
+                    <div key={element.id_publicacion} className="card-vehiculo" /* to={`/detalle/${element.id_publicacion}`} */>
                         <Card
                             id={element.id_publicacion}
                             imagen={element.imagen}

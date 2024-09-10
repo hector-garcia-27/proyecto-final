@@ -24,7 +24,6 @@
     border-radius: 10px;
     width: 100px;
     border: none;
-
 }
 
 .filtrarPor {
@@ -37,21 +36,31 @@
 
 .btnOrdenarPor {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     gap: 10px;
     
 }
 
 .galeriaVehiculos {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     justify-content: center;
+    width: 90%;
+    max-width: 1200px;
     gap: 20px;
     padding: 20px; 
 }
 
+.card-vehiculo {
+    display: grid;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+}
+
 .btnFiltros {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
@@ -77,8 +86,13 @@
 
 }
 
+.galeriaVehiculos a {
+    text-decoration: none;
+    color: inherit; 
+}
 
-@media (max-width: 425px) {
+@media (min-width: 425px) {
+
     .btnFiltros {
         flex-direction: column;
         gap: 5px;
@@ -86,7 +100,7 @@
     }
 
     .btnOrdenarPor {
-        flex-direction: column;
+        flex-direction: row;
         gap: 5px;
         margin: 10px;
     }
@@ -97,20 +111,27 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
+    .galeriaVehiculos{
+        grid-template-columns: 1fr 1fr;
+    }
+
     .btnFiltros {
-        flex-direction: column;
+        flex-direction: row;
         gap: 5px;
         width: 100%;
     }
 
     .botonOrdenarPor {
         width: 100px;
+        flex-direction: row;
     }
 }
 
 
-.galeriaVehiculos a {
-    text-decoration: none;
-    color: inherit; 
+
+@media (min-width: 992px) {
+    .galeriaVehiculos{
+        grid-template-columns: 1fr 1fr 1fr;
+    }
 }
